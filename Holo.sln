@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holo", "Holo\Holo.csproj", "{1E05EBC8-C356-4BE8-9C7F-A892EB1ED4A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{08233588-07CE-44C5-80E2-7FF72EA8FEA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{2AEBA421-8BA4-484A-8AD4-4A84C164A1A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E05EBC8-C356-4BE8-9C7F-A892EB1ED4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E05EBC8-C356-4BE8-9C7F-A892EB1ED4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E05EBC8-C356-4BE8-9C7F-A892EB1ED4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E05EBC8-C356-4BE8-9C7F-A892EB1ED4A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08233588-07CE-44C5-80E2-7FF72EA8FEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08233588-07CE-44C5-80E2-7FF72EA8FEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08233588-07CE-44C5-80E2-7FF72EA8FEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08233588-07CE-44C5-80E2-7FF72EA8FEA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AEBA421-8BA4-484A-8AD4-4A84C164A1A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AEBA421-8BA4-484A-8AD4-4A84C164A1A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AEBA421-8BA4-484A-8AD4-4A84C164A1A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AEBA421-8BA4-484A-8AD4-4A84C164A1A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DD6183C-48EB-4EE4-A246-869396901A88}
+	EndGlobalSection
+EndGlobal
