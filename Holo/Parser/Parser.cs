@@ -13,22 +13,44 @@ public static class Parser {
             }
             // Identifier
             if (EatIdentifier(Code, ref Index) is string Identifier) {
+                // Spaces
                 EatSpaces(Code, ref Index);
 
-                // Method call (no arguments or brackets)
-                if (EatLineBreak(Code, ref Index)) {
-                    Statements.Add(new CallStatement(new SelfExpression(), Identifier, []));
+                // Assignment
+                if (EatAssignmentOperator(Code, ref Index) is string AssignmentOperator) {
+                    Expression Value = EatExpression(Code, ref Index)
+                        ?? throw new Exception($"expected assignment value after '{AssignmentOperator}'");
+                    Statements.Add(new AssignStatement(new SelfExpression(), Identifier, Value));
+                    continue;
+                }
+                // Method call (brackets)
+                if (EatBracketExpression(Code, ref Index) is Expression Arguments) {
+                    Statements.Add(new CallStatement(new SelfExpression(), Identifier, [Arguments]));
                     continue;
                 }
                 // Method call (one argument)
-                else if (EatExpression(Code, ref Index) is Expression Argument) {
+                if (EatExpression(Code, ref Index) is Expression Argument) {
                     Statements.Add(new CallStatement(new SelfExpression(), Identifier, [Argument]));
                     continue;
                 }
-                // Invalid
-                else {
-                    throw new Exception($"invalid character: '{Code[Index]}'");
+
+                // Newline
+                if (EatNewlines(Code, ref Index)) {
+                    // Assignment
+                    if (EatAssignmentOperator(Code, ref Index) is string AssignmentOperator2) {
+                        Expression Value = EatExpression(Code, ref Index)
+                            ?? throw new Exception($"expected assignment value after '{AssignmentOperator2}'");
+                        Statements.Add(new AssignStatement(new SelfExpression(), Identifier, Value));
+                        continue;
+                    }
+
+                    // Method call (no arguments or brackets)
+                    Statements.Add(new CallStatement(new SelfExpression(), Identifier, []));
+                    continue;
                 }
+
+                // Invalid
+                throw new Exception($"invalid character: '{Code[Index]}'");
             }
             // Invalid
             throw new Exception($"invalid character: '{Code[Index]}'");
@@ -44,7 +66,7 @@ public static class Parser {
             }
         }
     }
-    private static bool EatLineBreak(string Code, ref int Index) {
+    private static bool EatNewlines(string Code, ref int Index) {
         bool LineBreak = false;
         for (; Index < Code.Length; Index++) {
             if (Code[Index] is '\n' or '\r') {
@@ -61,7 +83,7 @@ public static class Parser {
         EatSpaces(Code, ref Index);
 
         // Bracket
-        if (EatBracket(Code, ref Index) is Expression BracketExpression) {
+        if (EatBracketExpression(Code, ref Index) is Expression BracketExpression) {
             return BracketExpression;
         }
         // Quote String
@@ -93,14 +115,14 @@ public static class Parser {
     }
     private static string? EatIdentifier(string Code, ref int Index) {
         // Ensure start of identifier
-        if (!Code[Index].IsValidIdentifier()) {
+        if (!(char.IsLetter(Code[Index]) || Code[Index] is '_')) {
             return null;
         }
 
         // Build identifier while valid
         StringBuilder Builder = new();
         for (; Index < Code.Length; Index++) {
-            if (Code[Index].IsValidIdentifier()) {
+            if (char.IsLetterOrDigit(Code[Index]) || Code[Index] is '_') {
                 Builder.Append(Code[Index]);
             }
             else {
@@ -109,7 +131,7 @@ public static class Parser {
         }
         return Builder.ToString();
     }
-    private static Expression? EatBracket(string Code, ref int Index) {
+    private static Expression? EatBracketExpression(string Code, ref int Index) {
         // Ensure start of bracket expression
         if (Code[Index] is not '(') {
             return null;
@@ -180,5 +202,16 @@ public static class Parser {
             }
         }
         return Builder.ToString();
+    }
+    private static string? EatAssignmentOperator(string Code, ref int Index) {
+        if (Code[Index] is '=') {
+            Index++;
+            return "=";
+        }
+        else if (Code[Index] is ':' && Index < Code.Length && Code[Index + 1] is '=') {
+            Index += 2;
+            return ":=";
+        }
+        return null;
     }
 }

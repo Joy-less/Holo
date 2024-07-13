@@ -1,4 +1,6 @@
-﻿namespace Holo;
+﻿using System.Numerics;
+
+namespace Holo;
 
 public static class Compiler {
     public static List<Instruction> Compile(IEnumerable<Statement> Statements) {
@@ -7,10 +9,18 @@ public static class Compiler {
         foreach (Statement Statement in Statements) {
             // Call
             if (Statement is CallStatement CallStatement) {
+                Instructions.AddRange(CompileExpression(CallStatement.Context));
                 foreach (Expression Argument in CallStatement.Arguments) {
                     Instructions.AddRange(CompileExpression(Argument));
                 }
                 Instructions.Add(new CallInstruction(CallStatement.MethodName, CallStatement.Arguments.Length));
+                continue;
+            }
+            // Assignment
+            if (Statement is AssignStatement AssignmentStatement) {
+                Instructions.AddRange(CompileExpression(AssignmentStatement.Context));
+                Instructions.AddRange(CompileExpression(AssignmentStatement.Value));
+                Instructions.Add(new AssignInstruction(AssignmentStatement.VariableName));
                 continue;
             }
             // Not implemented
@@ -21,12 +31,16 @@ public static class Compiler {
     }
 
     private static List<Instruction> CompileExpression(Expression Expression) {
-        // Decimal
-        if (Expression is DecimalExpression DecimalExpression) {
-
+        // Self
+        if (Expression is SelfExpression) {
+            return [new SelfInstruction()];
         }
         // Integer
         if (Expression is IntegerExpression IntegerExpression) {
+            return [new IntegerInstruction(BigInteger.Parse(IntegerExpression.Integer))];
+        }
+        // Decimal
+        if (Expression is DecimalExpression DecimalExpression) {
 
         }
         // String
@@ -35,10 +49,6 @@ public static class Compiler {
         }
         // Method
         if (Expression is MethodExpression MethodExpression) {
-
-        }
-        // Self
-        if (Expression is SelfExpression SelfExpression) {
 
         }
         // Invalid

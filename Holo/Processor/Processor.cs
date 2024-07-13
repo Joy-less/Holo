@@ -5,6 +5,21 @@ public static class Processor {
         Stack<Box> Stack = [];
 
         foreach (Instruction Instruction in Instructions) {
+            // Self
+            if (Instruction is SelfInstruction SelfInstruction) {
+                Stack.Push(Context);
+                continue;
+            }
+            // Integer
+            if (Instruction is IntegerInstruction IntegerInstruction) {
+                Stack.Push(new Box(IntegerInstruction.Integer));
+                continue;
+            }
+            // String
+            if (Instruction is StringInstruction StringInstruction) {
+                Stack.Push(new Box(StringInstruction.String));
+                continue;
+            }
             // Call
             if (Instruction is CallInstruction CallInstruction) {
                 // Pop arguments from stack
@@ -13,16 +28,26 @@ public static class Processor {
                     Arguments[Index] = Stack.Pop();
                 }
 
-                // Get method
-                Method Method = Context.GetMethod(CallInstruction.MethodName);
+                // Pop context from stack
+                Box CallContext = Stack.Pop();
+
+                // Get method by name
+                Method Method = CallContext.GetMethod(CallInstruction.MethodName);
 
                 // Call method
-                Method.Call(Context, Arguments);
+                Method.Call(CallContext, Arguments);
                 continue;
             }
-            // String
-            if (Instruction is StringInstruction StringInstruction) {
-                Stack.Push(new Box(StringInstruction.String));
+            // Assign
+            if (Instruction is AssignInstruction AssignInstruction) {
+                // Pop value from stack
+                Box Value = Stack.Pop();
+
+                // Pop context from stack
+                Box AssignContext = Stack.Pop();
+
+                // Assign to variable
+                AssignContext.SetProperty(AssignInstruction.VariableName, Value);
                 continue;
             }
             // Not implemented
