@@ -208,7 +208,7 @@ cat.length
 cat.length = 5
 ```
 
-If a method is redefined, the original method can be called with `origin`.
+If a method is redefined, the original method can be called with the `origin` method.
 ```
 sub say(message)
   log(message)
@@ -216,6 +216,12 @@ end
 sub say(message)
   log("I was here")
   origin
+end
+```
+
+Only boxes deriving from `box` have an `eval` method for extending. However, all boxes can be extended with extension methods.
+```
+sub cat.say(message)
 end
 ```
 
