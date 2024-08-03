@@ -262,9 +262,11 @@ method_attributes.get("get_nuclear_launch_codes").get(1)
 
 Core attributes:
 ```
+[get] (variable) - return this variable if method not found
+[set] (variable) - set this variable if method not found
 [private] (method) - warn if called outside of box / derived box
-[abstract] (variable, method) - if variable, warn if `new` called; if method, warn if not overridden in derived box
-[static] (variable, method) - warn if accessed from derived box (including instances)
+[abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived box
+[static] (variable, method) - warn if accessed from derived box (instances are derived)
 [summary(message:string)] (variable, method) - description for intellisense
 [deprecated(message:string = null)] (variable, method) - warn if used
 ```
