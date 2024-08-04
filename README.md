@@ -174,6 +174,7 @@ method("say").overloads.first.call # Call the first overload
 ```
 
 Surplus arguments can be caught with the surplus operator.
+There can only be one surplus operator, but it can be in any order (e.g. `a, ~b, c`).
 ```
 sub say(~things)
   for thing in things
@@ -219,10 +220,36 @@ sub say(message)
 end
 ```
 
-Only boxes deriving from `box` have an `eval` method for extending. However, all boxes can be extended with extension methods.
+Box methods can be defined without the `eval` method.
 ```
 sub cat.say(message)
 end
+```
+
+Arguments can be passed by name.
+```
+cat.say(message = "meow")
+```
+
+Holo's type annotations are designed for simple type safety. Generic arguments are too complex for Holo.
+However, methods can return generic values by annotating the return type as the name of an argument or `self`.
+```
+sub log_get(value:box):value
+  log value
+  return value
+end
+five := log_get(5) # five:int
+```
+```
+animal := {
+  sub deep_fake:self
+    return self.new
+  end
+}
+cat := {
+  include animal
+}
+fake_cat := cat.deep_fake # fake_cat:cat
 ```
 
 ### Tables
@@ -425,8 +452,8 @@ Holo supports enums as a type of box containing a string and a number.
 entity_type := {
   include enum
   
-  player := new(1)
-  animal := new
+  [get] player := new(1)
+  [get] animal := new
 }
 log(entity_type.player.to_str) # "player"
 log(entity_type.animal.to_int) # 2
