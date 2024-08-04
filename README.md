@@ -455,8 +455,8 @@ entity_type := {
   [get] player := new(1)
   [get] animal := new
 }
-log(entity_type.player.to_str) # "player"
-log(entity_type.animal.to_int) # 2
+log(entity_type.player.name) # "player"
+log(entity_type.animal.value) # 2
 ```
 
 ### Events
@@ -496,3 +496,133 @@ It could be useful.
 goto hello
 label hello
 ```
+
+### Standard Library
+
+#### box
+
+Every box derives from box, even if not in the `components` table.
+- `stringify():str` - returns "box"
+- `new():self` - instantiates a new box with this box as a component
+- `components():table` - returns the boxes included in this box
+- `variables():table` - returns a table of variable names
+- `methods():table` - returns a table of method names
+- `eval(code:method):box` - executes the method in the box context
+- `hash_code():int` - returns a lookup number
+- `eval(code:str):box` - parses and executes the code in the box context
+- `==(other:box):bool` - returns true if both boxes have the same reference
+- `!=(other:box):bool` - calls `==` and returns the opposite
+- `<=>(other:box):bool` - calls comparison operators (may not be needed, only include if required for table lookups)
+
+#### global
+
+The global box methods can be called from anywhere. They have a higher precedence than methods in `self`.
+- `log(~messages):null` - logs each message to the standard output
+- `warn(~messages):null` - logs each warning message to the standard output
+- `throw(message:box):null` - creates an exception and throws it
+- `throw(exception1:exception):null` - throws the exception
+- `input():str` - reads and returns a line of user input
+- `wait(duration:num = 0.001):dec` - yields for the duration in seconds and returns the exact amount of time waited
+- `local_variables():table` - returns a table of variable names
+- `rand(range1:range):num` - calls `random.rand` and returns a random number in the range
+- `rand(max:num):max` - calls `random.rand` and returns a random number in the range
+- `exit(code:int = 0):null` - exits the application with the given exit code
+- `quit(code:int = 0):null` - calls `exit()`
+- `holo_version():str` - returns the Holo language version
+- `holo_copyright():str` - returns the Holo language copyrights
+
+#### boolean (bool)
+
+Has two instances: `true` and `false`.
+- `stringify():str` - returns "true" if equals `true`, otherwise "false"
+
+#### string (str) (includes sequence)
+
+An immutable sequence of characters.
+- `stringify():str` - returns self
+- `count():int` - returns the number of characters
+- `count(sequence:str):int` - returns the number of times the sequence appears
+- `length():int` - calls `count()`
+- `characters():table` - gets a table of characters in the string
+- `trim(predicate:method = null):str` - removes characters matching a predicate from the start and end of the string (defaults to whitespace)
+- `trim_start(predicate:method = null):str` - removes characters matching a predicate from the start of the string (defaults to whitespace)
+- `trim_start(sequence:str):str` - removes the sequence from the start of the string
+- `trim_end(predicate:method = null):str` - removes characters matching a predicate from the end of the string (defaults to whitespace)
+- `trim_end(sequence:str):str` - removes the sequence from the end of the string
+- `to_case(case:string_case_type):str` - converts the string to PascalCase, lowerCamelCase, snake_case, kebab-case, flatcase, Title Case, Sentence case
+- `to_upper():str` - converts letters in the string to uppercase
+- `to_lower():str` - converts letters in the string to lowercase
+- `replace(find:str, with:str, limit:int? = null):str` - replaces each appearance of a sequence with another sequence up to limit times
+- `+(other:box):str` - concatenates the string and other.stringify
+- `*(count:int):str` - repeats the string count times
+- `==(other:box):bool` - returns true if other is an equal string
+- `<(other:box):bool` - returns true if other is a string preceding alphabetically
+- `<=(other:box):bool` - returns true if other is a string equal or preceding alphabetically
+- `>=(other:box):bool` - returns true if other is a string succeeding alphabetically
+- `>(other:box):bool` - returns true if other is a string equal or succeeding alphabetically
+
+#### number (num)
+
+The base component for integers and decimals.
+- `stringify():str` - returns "number"
+
+#### integer (int)
+
+A signed whole number with arbitrary size and precision.
+- `stringify():str` - returns the integer as a string
+- `parse(str1:str):int` - converts the string to an integer
+- `parse_or_null(str1:str?):int?` - converts the string to an integer or returns null
+
+#### decimal (dec)
+
+A signed base-10 fractional number with arbitrary size and precision.
+- `stringify():str` - returns the decimal as a string
+- `parse(str1:str):dec` - converts the string to a decimal
+- `parse_or_null(str1:str?):dec?` - converts the string to a decimal or returns null
+
+#### iterator
+
+Gets each item in a sequence.
+- `stringify():str` - returns "iterator"
+- `current():box` - returns the current item in the sequence
+- `move_next():bool` - changes current to the next item in the sequence
+
+#### sequence
+
+An iterable, deferred sequence of items.
+- `stringify():str` - concatenates the sequence to a string enclosed in square brackets
+- `each():iterator` - returns an iterator for each item
+- `to_table():table` - adds each item to a table
+- `add(item:box):sequence` - adds an item to the end of the sequence
+- `add_each(items:sequence):sequence` - adds each item to the end of the sequence
+- `prepend(item:box):sequence` - adds an item to the start of the sequence
+- `prepend_each(items:sequence):sequence` - adds each item to the start of the sequence
+- `all(predicate:method):bool` - returns true if all items match the predicate
+- `any(predicate:method):bool` - returns true if any item matches the predicate
+- `any():bool` - returns true if the sequence has at least one item
+- `count():int` - returns the number of items
+- `count(sequence:str):int` - returns the number of times the sequence appears in self
+- `length():int` - calls `count()`
+- `concat(separator:str = "", stringify:method = null):str` - adds each item to a string by calling stringify
+- `remove(item:box, limit:int? = null):sequence` - removes each appearance of the item up to limit times
+- `remove_duplicates():sequence` - removes duplicate items
+- `remove_where(predicate:method):sequence` - removes items matching a predicate
+- `first(predicate:method):box` - returns the first item matching the predicate
+- `first_or_null(predicate:method):box?` - returns the first item matching the predicate or null
+- `first():box` - returns the first item
+- `first_or_null():box` - returns the first item or null
+- `last(predicate:method):box` - returns the last item matching the predicate
+- `last_or_null(predicate:method):box?` - returns the last item matching the predicate or null
+- `last():box` - returns the last item
+- `last_or_null():box` - returns the last item or null
+- `average(type:average_type = average_type.mean):num` - returns the average value of the sequence of numbers using mean, median, mode, or range
+- `max(value:method = null):num` - gets the biggest value in the sequence of numbers
+- `min(value:method = null):num` - gets the smallest value in the sequence of numbers
+- `sort(comparer:method = null):sequence` - sorts the sequence into an order using the comparer
+- `reverse():sequence` - reverses the order of the sequence
+- `clone():sequence` - shallow-copies the sequence into another sequence
+
+#### table (includes sequence)
+
+An sequence of key-value pairs.
+- `stringify():str` - concatenates the key-value pairs to a string enclosed in square brackets
