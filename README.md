@@ -231,15 +231,39 @@ Arguments can be passed by name.
 cat.say(message = "meow")
 ```
 
-Holo's type annotations are designed for simple type safety. Generic arguments are too complex for Holo.
-However, methods can return generic values by annotating the return type as the name of an argument or `self`.
+### Type Annotations
+
+Type annotations are methods rather than values, so they change if the method returns a different value.
+This makes type annotations generic without special generic syntax.
+
+Variable reference:
 ```
-sub log_get(value:box):value
-  log value
-  return value
+toy_box := {
+  # generics
+  t_toy:box
+
+  # variables
+  contents:t_toy
+
+  # methods
+  sub new(t_toy1:box)
+    t_toy = t_toy1
+  end
+}
+
+toy_box1 := toy_box.new(int)
+toy_box1.contents = "ball" # error
+```
+
+Parameter reference:
+```
+sub increment(value:num):value
+  return value + 1
 end
-five := log_get(5) # five:int
+five := increment(4) # five:int
 ```
+
+Self reference:
 ```
 animal := {
   sub deep_fake:self
