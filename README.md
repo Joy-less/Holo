@@ -352,6 +352,7 @@ These operators are shorthand for method calls.
 0 ^ 1               # 0.`^`(1)
 0 in [1, 2, 3]      # [1, 2, 3].contains(0)
 0 not in [1, 2, 3]  # not [1, 2, 3].contains(0)
+0 is integer        # 0.includes(integer)
 ```
 
 These assignment operators are shorthand for applying method operators to the current value.
