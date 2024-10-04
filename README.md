@@ -246,7 +246,7 @@ sub increment(value:num):value
 end
 ```
 
-The `(of ..types)` operator (taken from Visual Basic) can be used with classes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
+The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
 ```
 toy_box := {
   contents:types(1)
@@ -397,8 +397,9 @@ These operators are shorthand for method calls.
 0 % 1               # 0.`%`(1)
 0 ^ 1               # 0.`^`(1)
 0 in [1, 2, 3]      # [1, 2, 3].contains(0)
-0 not in [1, 2, 3]  # not [1, 2, 3].contains(0)
+0 not_in [1, 2, 3]  # not [1, 2, 3].contains(0)
 0 is integer        # 0.includes(integer)
+0 is_not integer     # not 0.includes(integer)
 ```
 
 These assignment operators are shorthand for applying method operators to the current value.
@@ -459,7 +460,7 @@ end
 ```
 
 Cases run the first branch matching the subject.
-Valid when branches: `when matches`, `when == match`, `when != match`, `when in match`, `when not in match`, `when > match`, `when < match`, `when >= match`, `when <= match`.
+Valid when branches: `when matches`, `when == match`, `when != match`, `when in match`, `when not_in match`, `when > match`, `when < match`, `when >= match`, `when <= match`.
 ```
 case input
 when 0, 1
@@ -478,7 +479,7 @@ end
 ### Exceptions
 
 Most languages use `try`/`catch` blocks for exception handling.
-Holo simplifies this with `try`/`else` where `try` always catches the exception.
+Holo attempts to simplify this with `try`/`else`, where `try` always catches the exception.
 ```
 try
   throw "exception"
