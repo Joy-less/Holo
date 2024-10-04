@@ -516,7 +516,7 @@ Events can be awaited and connected easily.
 on_fire := event.new()
 on_fire.invoke()
 on_fire.wait()
-on_fire.listen(sub()
+on_fire.hook(sub()
   # ...
 end)
 ```
