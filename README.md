@@ -575,8 +575,8 @@ A box representing no box. Type annotations exclude null unless they have a ques
 
 The global box methods can be called from anywhere. They have a higher precedence than methods in `self`.
 - `type():str` - returns "global"
-- `log(~messages):null` - logs each message to the standard output
-- `warn(~messages):null` - logs each warning message to the standard output
+- `log(..messages):null` - logs each message to the standard output
+- `warn(..messages):null` - logs each warning message to the standard output
 - `throw(message:box):null` - creates an exception and throws it
 - `throw(exception1:exception):null` - throws the exception
 - `input():str` - reads and returns a line of user input
@@ -631,10 +631,7 @@ The base component for integers and decimals.
 - `stringify():str` - returns "number"
 - `type():str` - returns "number"
 - `to_dec():dec` - converts the number to a decimal
-- `to_radians():num` - converts degrees to radians
-- `to_rad():num` - calls `to_radians()`
-- `to_degrees():num` - converts radians to degrees
-- `to_deg():num` - calls `to_degrees()`
+- `convert_angle(from:angle_type, to:angle_type):num` - converts the angle between different types (degrees, radians, gradians, turns)
 - `sqrt():num` - returns the square root of the number
 - `cbrt():num` - returns the cube root of the number
 - `lerp(to:num, weight:num):dec` - linearly interpolates the number
@@ -654,7 +651,7 @@ A signed whole number with arbitrary size and precision.
 
 #### decimal (dec)
 
-A signed base-10 fractional number with arbitrary size and precision.
+A signed fractional number with arbitrary size and precision.
 - `stringify():str` - returns the decimal as a string
 - `type():str` - returns "decimal"
 - `parse(str1:str):dec` - converts the string to a decimal
@@ -744,39 +741,62 @@ A key-value pair in a table.
 A range between two inclusive numbers.
 - `type():str` - returns "range"
 - `stringify():str` - returns (min + " to " + max + " step " + step)
-- `new(min:num?, max:num?, step:num = 1)` - returns a new range
-- `min():num?` - returns the minimum value
+- `new(min:num?, max:num?, step:num = 1):range` - returns a new range
+- `min():min` - returns the minimum value
 - `set_min(value:num?):null` - sets the minimum value
-- `max():num?` - returns the maximum value
+- `max():max` - returns the maximum value
 - `set_max(value:num?):null` - sets the maximum value
-- `step():num` - returns the step value
+- `step():step` - returns the step value
 - `set_step(value:num):null` - sets the step value
 
 #### time
 
-A date and time on planet Earth.
-- `stringify():str` - returns the time formatted like "2024/08/04 15-46 +0000"
+A date and time in the Gregorian calendar.
+- `stringify(format:str):str` - returns the time formatted with the given (.NET) format string
+- `stringify():str` - returns the time formatted like "2024/08/04 15:46 +0000"
 - `type():str` - returns "time"
-- `new(year:num = 0, month:num = 0, day:num = 0, hour:num = 0, minute:num = 0, second:num = 0, offset:num = 0)` - returns a new time
-- `now(local:bool = false):time` - returns a new time at the current time (UTC or local)
-- `epoch(timestamp:num = 0):time` - returns a new time at timestamp seconds after the epoch (1970-01-01 00:00:00 +0)
-- `timestamp():dec` - returns the number of seconds since the `epoch()`
-- `year():dec` - returns the year component
-- `set_year(value:num):dec` - sets the year component
-- `month():dec` - returns the month component
-- `set_month(value:num):dec` - sets the month component
-- `day():dec` - returns the day component
-- `set_day(value:num):dec` - sets the day component
+- `new(total_seconds:num)` - returns a new time
+- `new(year:num, month:num, day:num, hour:num, minute:num, second:num, offset:num = 0)` - returns a new time
+- `new(year:num, month:num, day:num, offset:num = 0)` - returns a new time
+- `now(offset:num):time` - returns the current time at the given offset
+- `now():time` - returns the current time at the local system offset
+- `total_seconds():dec` - returns the number of seconds since 0
+- `total_milliseconds():dec` - returns the number of milliseconds since 0
+- `year():int` - returns the year component
+- `set_year(value:num):null` - sets the year component
+- `month():int` - returns the month component
+- `set_month(value:num):null` - sets the month component
+- `day():int` - returns the day component
+- `set_day(value:num):null` - sets the day component
 - `hour():dec` - returns the hour component
-- `set_hour(value:num):dec` - sets the hour component
+- `set_hour(value:num):null` - sets the hour component
 - `minute():dec` - returns the minute component
-- `set_minute(value:num):dec` - sets the minute component
+- `set_minute(value:num):null` - sets the minute component
 - `second():dec` - returns the second component
-- `set_second(value:num):dec` - sets the second component
+- `set_second(value:num):null` - sets the second component
 - `offset():dec` - returns the offset component
-- `set_offset(value:num):dec` - sets the offset component
-- `total_seconds():dec` - calculates the total number of seconds since the epoch
-- `total_milliseconds():dec` - divides `total_seconds()` by 1000
+- `set_offset(value:num):null` - sets the offset component
+- `parse(time1:str):time` - converts the string to a time
+- `parse_or_null(time1:str?):time?` - converts the string to a time or returns null
+
+#### span
+
+A period of time.
+- `stringify(format:str):str` - returns the span formatted with the given (.NET) format string
+- `stringify():str` - returns the span formatted like "00:14:23.1294"
+- `type():str` - returns "span"
+- `new(total_seconds:num)` - returns a new span
+- `new(hours:num, minutes:num, seconds:num)` - returns a new span
+- `total_seconds():dec` - returns the total number of seconds
+- `total_milliseconds():dec` - returns the total number of milliseconds
+- `hour():dec` - returns the hour component
+- `set_hour(value:num):null` - sets the hour component
+- `minute():dec` - returns the minute component
+- `set_minute(value:num):null` - sets the minute component
+- `second():dec` - returns the second component
+- `set_second(value:num):null` - sets the second component
+- `parse(span1:str):span` - converts the string to a span
+- `parse_or_null(span1:str?):span?` - converts the string to a span or returns null
 
 #### exception
 
@@ -791,8 +811,8 @@ An error or control code thrown up the call stack.
 #### weak_ref
 
 Holds a reference to a box without preventing it from being garbage collected.
-- `stringify():str` - returns (`message()` + "\n" + `strack_trace()`)
-- `type():str` - returns "exception"
+- `stringify():str` - returns (`message()` + "\n" + `stack_trace()`)
+- `type():str` - returns "weak_ref"
 - `context():box` - returns the weakly referenced box
 - `set_context(value:box):null` - sets the weakly referenced box
 - `is_alive():bool` - returns true if the weak reference is still valid
@@ -800,12 +820,24 @@ Holds a reference to a box without preventing it from being garbage collected.
 #### thread
 
 Runs code in the background collaboratively.
-- `call(method1:method, arguments:table = []):thread` - calls a method in the thread
+- `run(method1:method, arguments:table = []):thread` - calls a method in the thread
 - `wait():` - waits for the thread to finish
+
+#### mutex
+
+Limits the number of threads that can run at once.
+- `type():str` - returns "mutex"
+- `new(limit:int = 1):mutex` - returns a mutex with the given entry limit
+- `run(method1:method, arguments:table = []):thread` - calls a method in the mutex
+- `limit():int` - returns the entry limit
+- `set_limit(limit:int):null` - sets the entry limit
+- `remaining():int` - returns the remaining entries
+- `set_remaining(remaining:int):null` - sets the remaining entries
 
 #### canceller
 
 Cancels a background task collaboratively.
+- `type():str` - returns "canceller"
 - `cancel(delay:num = 0)` - calls `on_cancel()` after the delay
 - `on_cancel():event` - an event to be invoked when cancelled
 - `is_cancelled():bool` - returns true if cancelled
@@ -815,13 +847,15 @@ Cancels a background task collaboratively.
 #### event
 
 A signal to be awaited and listened to.
+- `type():str` - returns "event"
 - `invoke(arguments:table = []):null` - calls each listener and waiter
-- `listen(method1:method, limit:int? = null):null` - calls the method when the event is invoked up to limit times
+- `hook(method1:method, limit:int? = null):null` - calls the method when the event is invoked up to limit times
 - `wait():table` - waits for the event to be invoked
 
 #### math
 
 A collection of nerdy maths methods.
+- `type():str` - returns "math"
 - `pi():dec` - returns many digits of pi (3.14...)
 - `tau():dec` - returns many digits of tau (6.28...)
 - `e():dec` - returns many digits of e (2.71...)
@@ -831,6 +865,7 @@ A collection of nerdy maths methods.
 #### file
 
 Access files on the hard drive.
+- `type():str` - returns "file"
 - `read(path:str):str` - opens and reads text from the file
 - `read_bytes(path:str):table` - opens and reads a table of bytes from the file
 - `write(path:str, value:str):null` - opens and writes text to the file
@@ -844,14 +879,17 @@ Access files on the hard drive.
 - `relative_path(absolute:str):str` - converts the absolute path to a relative path
 - `file_name(path:str, extension:bool = true):str` - returns the file name from the path (e.g. "C://Documents/neko.jpg" becomes "neko.jpg")
 - `dir_path(path:str):str` - returns the directory path from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents")
+- `extension(path:str):str` - returns the extension from the path (e.g. "C://Documents/neko.jpg" becomes "jpg")
+- `remove_extension(path:str):str` - removes the extension from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents/neko")
 
 #### random
 
 Generate pseudo-random numbers.
-- `seed():int` - returns the random seed
-- `set_seed(value:int):null` - sets the random seed
-- `int(min:num, max:num):int` - returns a random integer between min and max
+- `type():str` - returns "random"
+- `seed():num` - returns the random seed
+- `set_seed(value:num):null` - sets the random seed
+- `int(min:num, max:num):int` - returns a random integer from min to max
 - `int(max:num):int` - calls `int(1, max)`
 - `int(range1:range):int` - returns a random integer in the range
-- `dec(min:num, max:num):dec` - returns a random decimal between min and max
+- `dec(min:num, max:num):dec` - returns a random decimal from min to max
 - `dec(range1:range):dec` - returns a random decimal in the range
