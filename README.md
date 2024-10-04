@@ -133,7 +133,7 @@ tama = cat.new("Tama")
 
 ### Methods
 
-Methods run under a context (`self`).
+Methods run under a context accessible with `self`.
 
 Methods are called by name. Brackets are optional.
 ```
@@ -174,15 +174,15 @@ method("say").overloads.first.call # Call the first overload
 ```
 
 Surplus arguments can be caught with the surplus operator.
-There can only be one surplus operator, but it can be in any order (e.g. `a, ~b, c`).
+There can only be one surplus operator, but it can be in any order (e.g. `a, ..b, c`).
 ```
-sub say(~things)
+sub say(..things)
   for thing in things
     log(thing)
   end
 end
 
-one, ~two_three = [1, 2, 3]
+one, ..two_three = [1, 2, 3]
 ```
 
 Assignments on a box are translated to method calls (like Ruby).
@@ -294,7 +294,7 @@ end
 
 Tables can be joined using the surplus operator.
 ```
-joined = [~table1, ~table2]
+joined = [..table1, ..table2]
 ```
 
 ### Attributes
