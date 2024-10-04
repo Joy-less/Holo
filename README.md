@@ -233,37 +233,32 @@ cat.say(message = "meow")
 
 ### Type Annotations
 
-Type annotations are methods rather than values, so they change if the method returns a different value.
-This makes type annotations generic without special generic syntax.
+Type annotations are treated as methods, which are called every time they are used.
 
-Variable reference:
+This allows you to pass them as variables:
+```
+sub increment(value:num):value
+  big_value:value = value + 1
+  return big_value
+end
+```
+
+The `(of ..types)` operator (taken from Visual Basic) can be used with classes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
 ```
 toy_box := {
-  # generics
-  t_toy:box
+  contents:types(1)
 
-  # variables
-  contents:t_toy
-
-  # methods
-  sub new(t_toy1:box)
-    t_toy = t_toy1
+  # example overload
+  sub of(types:table):null
+    origin(types)
   end
 }
 
-toy_box1 := toy_box.new(int)
+toy_box1 := toy_box(of int).new()
 toy_box1.contents = "ball" # error
 ```
 
-Parameter reference:
-```
-sub increment(value:num):value
-  return value + 1
-end
-five := increment(4) # five:int
-```
-
-Self reference:
+Example using `self` as a type:
 ```
 animal := {
   sub deep_fake:self
@@ -274,6 +269,32 @@ cat := {
   include animal
 }
 fake_cat := cat.deep_fake # fake_cat:cat
+```
+
+Examples of typing tables:
+```
+items := ["red", "blue", "green"](of int, string)
+```
+```
+items:table(of int, string) := ["red", "blue", "green"]
+```
+
+### Casts
+
+When a box is assigned to a variable of a different type, it is cast to that type.
+```
+health:decimal = 100
+```
+
+It does this using the `cast(to_type)` method.
+```
+sub cast(to_type)
+  if to_type is decimal
+    return # ...
+  else
+    return # ...
+  end
+end
 ```
 
 ### Tables
@@ -287,8 +308,8 @@ nicknames := [
   "Asuna" = "Lightning Flash",
 ]
 
-for nickname, name in nicknames
-  log("\{name} a.k.a. \{nickname}")
+for nickname in nicknames
+  log("\{nickname.key} a.k.a. \{nickname.value}")
 end
 ```
 
