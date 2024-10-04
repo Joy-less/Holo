@@ -492,19 +492,21 @@ end
 
 ### Enums
 
-Languages like Ruby use strings as enums. These suffer from typos, and don't easily support integers (useful for storing enums in files).
-Languages like GDScript use integers as enums. These suffer from poor debugging readability.
+Ruby uses strings (symbols) as enums. It suffers from typos and doesn't support integer casts.
 
-Holo supports enums as a type of box containing a string and a number.
+GDScript uses integers as enums. It suffers from poor debugging readability.
+
+Holo uses enums as a type of box that can be created with `enum` or `enum.new`. They contain a name:string and a value:number.
 ```
-entity_type := {
-  include enum
-  
-  player := new(1)
-  animal := new
-}
-log(entity_type.player.name) # "player"
-log(entity_type.animal.value) # 2
+entity_type := enum(
+  player = 1,
+  animal = 2,
+)
+
+log(entity_type.get("player").name) # "player"
+log(entity_type.get("animal").value) # 2
+
+log (entity_type.animal.name) # calls missing method; same as entity_type.get("animal").name
 ```
 
 ### Events
