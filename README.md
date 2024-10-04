@@ -531,7 +531,7 @@ wait()
 log(3)
 ```
 
-If you need to lock over asynchronous methods, you can use a mutex, which limits the number of calls that can run at once.
+If you need to lock over asynchronous methods, you can use a mutex, which limits the number of calls that can run at the same time.
 ```
 mutex1 := mutex.new(1)
 mutex1.run(sub()
