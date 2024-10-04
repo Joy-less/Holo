@@ -106,6 +106,9 @@ odd_numbers:range = 1 to 10 step 2
 Boxes are objects created with curly brackets.
 Rather than inheriting from a base type, they include multiple components.
 
+Both methods and variables are public by default.
+Methods have higher priority in dot notation, whereas variables have higher priority when named.
+
 ```
 cat := {
   include animal
@@ -334,9 +337,7 @@ method_attributes.get("get_nuclear_launch_codes").get(1)
 
 Core attributes:
 ```
-[get] (variable) - return this variable if method not found
-[set] (variable) - set this variable if method not found
-[private] (method) - warn if called outside of box / derived box
+[private] (variable, method) - warn if accessed outside of box / derived box
 [abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived box
 [static] (variable, method) - warn if accessed from derived box (instances are derived)
 [summary(message:string)] (variable, method) - description for intellisense
@@ -498,8 +499,8 @@ Holo supports enums as a type of box containing a string and a number.
 entity_type := {
   include enum
   
-  [get] player := new(1)
-  [get] animal := new
+  player := new(1)
+  animal := new
 }
 log(entity_type.player.name) # "player"
 log(entity_type.animal.value) # 2
