@@ -62,7 +62,7 @@ Type annotations are only enforced when assigning a value.
 So while every variable can be `null`, an error is thrown if `null` is assigned unless the type is annotated with `?`.
 ```
 var count:int
-log(count) # null
+log(count) # throws error
 count = null # throws error
 ```
 
