@@ -5,6 +5,34 @@ Holo is a unique scripting language inspired by Ruby and Lua. It aims for:
 - Expressiveness (code your way)
 - Embeddability (with .NET)
 
+## Examples
+
+### FizzBuzz
+```
+sub fizzbuzz(n)
+  for i in 1 to n
+    if i % 3 == 0 and i % 5 == 0
+      log "FizzBuzz"
+    elseif i % 3 == 0
+      log "Fizz"
+    elseif i % 5 == 0
+      log "Buzz"
+    else
+      log i
+    end
+  end
+end
+```
+
+### Fibonacci Sequence
+```
+sub fibonacci(n)
+  if n in [0, 1] do return n end
+  return fibonacci(n - 1) + fibonacci(n - 2)
+end
+log fibonacci(10)
+```
+
 ## Design Proposal
 
 ### Orientation
