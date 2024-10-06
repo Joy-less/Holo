@@ -617,7 +617,6 @@ Has two instances: `true` and `false`.
 #### string (str) (includes sequence)
 
 An immutable sequence of characters.
-- `type():str` - returns "string"
 - `stringify():str` - returns self
 - `count():int` - returns the number of characters
 - `count(sequence:str):int` - returns the number of times the sequence appears
@@ -647,7 +646,6 @@ An immutable sequence of characters.
 #### [abstract] number (num)
 
 The base component for integers and decimals.
-- `type():str` - returns "number"
 - `stringify():str` - returns "number"
 - `to_dec():dec` - converts the number to a decimal
 - `convert_angle(from:angle_type, to:angle_type):num` - converts the angle between different types (degrees, radians, gradians, turns)
@@ -663,7 +661,6 @@ The base component for integers and decimals.
 #### integer (int)
 
 A signed whole number with arbitrary size and precision.
-- `type():str` - returns "integer"
 - `stringify():str` - returns the integer as a string
 - `parse(str1:str):int` - converts the string to an integer
 - `parse_or_null(str1:str?):int?` - converts the string to an integer or returns null
@@ -671,7 +668,6 @@ A signed whole number with arbitrary size and precision.
 #### decimal (dec)
 
 A signed fractional number with arbitrary size and precision.
-- `type():str` - returns "decimal"
 - `stringify():str` - returns the decimal as a string
 - `parse(str1:str):dec` - converts the string to a decimal
 - `parse_or_null(str1:str?):dec?` - converts the string to a decimal or returns null
@@ -679,7 +675,6 @@ A signed fractional number with arbitrary size and precision.
 #### iterator
 
 Gets each item in a sequence.
-- `type():str` - returns "iterator"
 - `stringify():str` - returns "iterator"
 - `current():table` - returns the current items in the sequence
 - `move_next():bool` - tries to increment the sequence position
@@ -687,7 +682,6 @@ Gets each item in a sequence.
 #### sequence
 
 An iterable, deferred sequence of items.
-- `type():str` - returns "sequence"
 - `stringify():str` - returns "sequence"
 - `each():iterator` - returns an iterator for each item
 - `to_table():table` - adds each item to a new table
@@ -729,7 +723,6 @@ An iterable, deferred sequence of items.
 #### table (includes sequence)
 
 An sequence of key-value pairs.
-- `type():str` - returns "table"
 - `stringify():str` - returns a string like "[a = b, c = d]"
 - `each():iterator` - returns an iterator for each entry
 - `add(value:box):table` - adds a value at the key one above the highest ordinal key
@@ -753,7 +746,6 @@ An sequence of key-value pairs.
 #### entry
 
 A key-value pair in a table.
-- `type():str` - returns "entry"
 - `stringify():str` - returns (key + " = " + value)
 - `key():box` - returns the key
 - `value():box` - returns the value
@@ -761,7 +753,6 @@ A key-value pair in a table.
 #### range (includes sequence)
 
 A range between two inclusive numbers.
-- `type():str` - returns "range"
 - `stringify():str` - returns (min + " to " + max + " step " + step)
 - `new(min:num?, max:num?, step:num = 1):range` - returns a new range
 - `min():min` - returns the minimum value
@@ -774,7 +765,6 @@ A range between two inclusive numbers.
 #### procedure (proc)
 
 A box containing a method and a target. The method is internal since methods aren't boxes.
-- `type():str` - returns "procedure"
 - `stringify():str` - returns ""
 - `call(..arguments):box?` - calls the method on the target
 - `target():box` - returns the method target
@@ -783,7 +773,6 @@ A box containing a method and a target. The method is internal since methods are
 #### time
 
 A date and time in the Gregorian calendar.
-- `type():str` - returns "time"
 - `stringify(format:str):str` - returns the time formatted with the given (.NET) format string
 - `stringify():str` - returns the time formatted like "2024/08/04 15:46 +0000"
 - `new(total_seconds:num)` - returns a new time
@@ -813,7 +802,6 @@ A date and time in the Gregorian calendar.
 #### span
 
 A period of time.
-- `type():str` - returns "span"
 - `stringify(format:str):str` - returns the span formatted with the given (.NET) format string
 - `stringify():str` - returns the span formatted like "00:14:23.1294"
 - `new(total_seconds:num)` - returns a new span
@@ -832,7 +820,6 @@ A period of time.
 #### exception
 
 An error or control code thrown up the call stack.
-- `type():str` - returns "exception"
 - `stringify():str` - returns (`message()` + "\n" + `strack_trace()`)
 - `new(message:box? = null)` - returns an exception instance with the given message
 - `message():box` - returns the exception message
@@ -842,7 +829,6 @@ An error or control code thrown up the call stack.
 #### weak_reference (weak_ref)
 
 Holds a reference to a box without preventing it from being garbage collected.
-- `type():str` - returns "weak_reference"
 - `stringify():str` - returns (`message()` + "\n" + `stack_trace()`)
 - `context():box` - returns the weakly referenced box
 - `set_context(value:box):null` - sets the weakly referenced box
@@ -851,14 +837,12 @@ Holds a reference to a box without preventing it from being garbage collected.
 #### thread
 
 Runs code in the background collaboratively.
-- `type():str` - returns "thread"
 - `run(method1:method, arguments:table = []):thread` - calls a method in the thread
 - `wait():` - waits for the thread to finish
 
 #### mutex
 
 Limits the number of threads that can run at once.
-- `type():str` - returns "mutex"
 - `new(limit:int = 1):mutex` - returns a mutex with the given entry limit
 - `run(method1:method, arguments:table = []):thread` - calls a method in the mutex
 - `limit():int` - returns the entry limit
@@ -869,7 +853,6 @@ Limits the number of threads that can run at once.
 #### canceller
 
 Cancels a background task collaboratively.
-- `type():str` - returns "canceller"
 - `cancel(delay:num = 0)` - calls `on_cancel()` after the delay
 - `on_cancel():event` - an event to be invoked when cancelled
 - `is_cancelled():bool` - returns true if cancelled
@@ -879,7 +862,6 @@ Cancels a background task collaboratively.
 #### event
 
 A signal to be awaited and listened to.
-- `type():str` - returns "event"
 - `invoke(arguments:table = []):null` - calls each listener and waiter
 - `hook(method1:method, limit:int? = null):null` - calls the method when the event is invoked up to limit times
 - `wait():table` - waits for the event to be invoked
@@ -887,7 +869,6 @@ A signal to be awaited and listened to.
 #### math
 
 A collection of nerdy maths methods.
-- `type():str` - returns "math"
 - `pi():dec` - returns many digits of pi (3.14...)
 - `tau():dec` - returns many digits of tau (6.28...)
 - `e():dec` - returns many digits of e (2.71...)
@@ -897,7 +878,6 @@ A collection of nerdy maths methods.
 #### file
 
 Access files on the hard drive.
-- `type():str` - returns "file"
 - `read(path:str):str` - opens and reads text from the file
 - `read_bytes(path:str):table` - opens and reads a table of bytes from the file
 - `write(path:str, value:str):null` - opens and writes text to the file
@@ -917,7 +897,6 @@ Access files on the hard drive.
 #### random
 
 Generate pseudo-random numbers.
-- `type():str` - returns "random"
 - `seed():num` - returns the random seed
 - `set_seed(value:num):null` - sets the random seed
 - `int(min:num, max:num):int` - returns a random integer from min to max
