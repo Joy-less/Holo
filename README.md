@@ -384,7 +384,7 @@ Core attributes:
 [abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived box
 [static] (variable, method) - warn if accessed from derived box (instances are derived)
 [summary(message:string)] (variable, method) - description for intellisense
-[deprecated(message:string = null)] (variable, method) - warn if used
+[deprecated(message:string? = null)] (variable, method) - warn if used
 ```
 
 ### Comments
@@ -649,10 +649,10 @@ An immutable sequence of characters.
 - `count(sequence:str):int` - returns the number of times the sequence appears
 - `length():int` - calls `count()`
 - `characters():table` - gets a table of characters in the string
-- `trim(predicate:method = null):str` - removes characters matching a predicate from the start and end of the string (defaults to whitespace)
-- `trim_start(predicate:method = null):str` - removes characters matching a predicate from the start of the string (defaults to whitespace)
+- `trim(predicate:method? = null):str` - removes characters matching a predicate from the start and end of the string (defaults to whitespace)
+- `trim_start(predicate:method? = null):str` - removes characters matching a predicate from the start of the string (defaults to whitespace)
 - `trim_start(sequence:str):str` - removes the sequence from the start of the string
-- `trim_end(predicate:method = null):str` - removes characters matching a predicate from the end of the string (defaults to whitespace)
+- `trim_end(predicate:method? = null):str` - removes characters matching a predicate from the end of the string (defaults to whitespace)
 - `trim_end(sequence:str):str` - removes the sequence from the end of the string
 - `to_case(case:string_case_type):str` - converts the string to PascalCase, lowerCamelCase, snake_case, kebab-case, flatcase, Title Case, Sentence case
 - `to_upper():str` - converts letters in the string to uppercase
@@ -723,7 +723,7 @@ An iterable, deferred sequence of items.
 - `count(item:box):int` - returns the number of times the item appears
 - `length():int` - calls `count()`
 - `contains(item:box):bool` - returns true if sequence contains item
-- `concat(separator:str = "", stringify:method = null):str` - adds each item to a string by calling stringify
+- `concat(separator:str = "", stringify:method? = null):str` - adds each item to a string by calling stringify
 - `remove(item:box, limit:int? = null):sequence` - removes each appearance of the item up to limit times
 - `remove_where(predicate:method, limit:int? = null):sequence` - removes items matching a predicate up to limit times
 - `remove_first(count:int = 1)` - removes the first count items
@@ -738,12 +738,12 @@ An iterable, deferred sequence of items.
 - `last_or_null(predicate:method):box?` - returns the last item matching the predicate or null
 - `last():box` - returns the last item
 - `last_or_null():box` - returns the last item or null
-- `max(value:method = null):num` - gets the biggest value in the sequence of numbers
-- `min(value:method = null):num` - gets the smallest value in the sequence of numbers
+- `max(value:method? = null):num` - gets the biggest value in the sequence of numbers
+- `min(value:method? = null):num` - gets the smallest value in the sequence of numbers
 - `average(type:average_type = average_type.mean):num` - returns the average value of the sequence of numbers using mean, median, mode, or range
 - `sum():num` - adds all items in the sequence of numbers
 - `product():num` - multiplies all items in the sequence of numbers
-- `sort(comparer:method = null):sequence` - sorts the sequence into an order using the comparer
+- `sort(comparer:method? = null):sequence` - sorts the sequence into an order using the comparer
 - `reverse():sequence` - reverses the order of the sequence
 - `clone():sequence` - shallow-copies the sequence into another sequence
 
