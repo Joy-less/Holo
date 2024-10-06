@@ -24,16 +24,16 @@ Assignment is not a valid expression.
 
 ### Variables
 
-Variables are declared with a type and assigned without a type.
+Variables are declared with `var` and an optional type and value.
 ```
-cats:int = 3
+var cats:int = 3
 cats = 4
-dogs := 2
+var dogs := 2
 ```
 
 Variable identifiers can be anything if wrapped in backticks.
 ```
-`~#:@!` := 5
+var `~#:@!` := 5
 ```
 
 ### Scopes
@@ -56,8 +56,8 @@ end
 
 Holo has two number types: integers and decimals. Both are signed and arbitrarily large and precise (like Ruby).
 ```
-int1 := 3
-dec1 := 6.2
+var int1 := 3
+var dec1 := 6.2
 ```
 
 ### Strings
@@ -65,16 +65,16 @@ dec1 := 6.2
 Strings are immutable and can span multiple lines.
 Double-quotes parse escape sequences whereas single-quotes ignore them (like Ruby).
 ```
-string1 := "formatted"
-string2 := 'not formatted'
+var string1 := "formatted"
+var string2 := 'not formatted'
 ```
 
 Triple quotes trim the whitespace to the left of the closing quotes.
 ```
-string1 := """
+var string1 := """
     formatted
     """
-string2 := '''
+var string2 := '''
     not formatted
     '''
 ```
@@ -97,8 +97,8 @@ Escape sequences start with a backslash. Any unrecognised escape sequence is a s
 Ranges can be created with `min to max (step value)`.
 They are inclusive as Holo uses one-based indexing.
 ```
-numbers:range = 1 to 10
-odd_numbers:range = 1 to 10 step 2
+var numbers:range = 1 to 10
+var odd_numbers:range = 1 to 10 step 2
 ```
 
 ### Boxes
@@ -110,7 +110,7 @@ Both methods and variables are public by default.
 Methods have higher priority in dot notation, whereas variables have higher priority when named.
 
 ```
-cat := {
+var cat := {
   include animal
   include pathfinding
 
@@ -122,7 +122,7 @@ cat := {
 
 To instantiate a box, call the `new` method which clones the box and calls the `init` method.
 ```
-cat := {
+var cat := {
   name:str
 
   sub init(name:str)
@@ -131,7 +131,7 @@ cat := {
   end
 }
 
-tama = cat.new("Tama")
+var tama = cat.new("Tama")
 ```
 
 ### Methods
@@ -157,7 +157,7 @@ meow
 
 Anonymous methods are declared with `sub` and wrapped in a method box. Brackets are mandatory.
 ```
-meow := sub()
+var meow := sub()
   log("nya")
 end
 meow.call
@@ -185,12 +185,12 @@ sub say(..things)
   end
 end
 
-one, ..two_three = [1, 2, 3]
+var one, ..two_three = [1, 2, 3]
 ```
 
 Assignments on a box are translated to method calls (like Ruby).
 ```
-cat := {
+var cat := {
   sub set_name(name:str)
     # ...
   end
@@ -200,7 +200,7 @@ cat.name = "Robbie"
 
 Missing methods can be caught with `missing` and `set_missing` methods.
 ```
-cat := {
+var cat := {
   sub missing(method)
     # ...
   end
@@ -233,7 +233,7 @@ cat.say(message = "meow")
 Extension methods are methods that refer to another box.
 When calling a method, extension methods take priority over normal methods.
 ```
-extensions := {
+var extensions := {
   sub cat.say(message)
     # ...
   end
@@ -249,14 +249,14 @@ Type annotations are treated as methods, which are called every time they are us
 This allows you to pass them as variables:
 ```
 sub increment(value:num):value
-  big_value:value = value + 1
+  var big_value:value = value + 1
   return big_value
 end
 ```
 
 The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
 ```
-toy_box := {
+var toy_box := {
   contents:types(1)
 
   # example overload
@@ -265,45 +265,45 @@ toy_box := {
   end
 }
 
-toy_box1 := toy_box(of int).new()
+var toy_box1 := toy_box(of int).new()
 toy_box1.contents = "ball" # error
 ```
 
 Example using `self` as a type:
 ```
-animal := {
+var animal := {
   sub deep_fake:self
     return self.new
   end
 }
-cat := {
+var cat := {
   include animal
 }
-fake_cat := cat.deep_fake # fake_cat:cat
+var fake_cat := cat.deep_fake # fake_cat:cat
 ```
 
 Examples of typing tables:
 ```
-items := ["red", "blue", "green"](of int, string)
+var items := ["red", "blue", "green"](of int, string)
 ```
 ```
-items:table(of int, string) := ["red", "blue", "green"]
+var items:table(of int, string) := ["red", "blue", "green"]
 ```
 
 ### Casts
 
 When a box is assigned to a variable of a different type, it is cast to that type.
 ```
-health:decimal = 100
+var health:decimal = 100
 ```
 
-It does this using the `cast(to_type)` method.
+It does this by calling the `cast(to_type)` method.
 ```
 sub cast(to_type)
   if to_type is decimal
-    return # ...
+    return to_dec()
   else
-    return # ...
+    return origin(to_type)
   end
 end
 ```
@@ -314,7 +314,7 @@ Tables are a type of box that store key-value pairs.
 If the key is omitted, they use one-based indexing (like Lua).
 They can be created with square brackets.
 ```
-nicknames := [
+var nicknames := [
   "Kirito" = "Black Swordsman",
   "Asuna" = "Lightning Flash",
 ]
@@ -326,7 +326,7 @@ end
 
 Tables can be joined using the surplus operator.
 ```
-joined = [..table1, ..table2]
+var joined := [..table1, ..table2]
 ```
 
 ### Attributes
@@ -407,7 +407,7 @@ These operators are shorthand for method calls.
 0 in [1, 2, 3]      # [1, 2, 3].contains(0)
 0 not_in [1, 2, 3]  # not [1, 2, 3].contains(0)
 0 is integer        # 0.includes(integer)
-0 is_not integer     # not 0.includes(integer)
+0 is_not integer    # not 0.includes(integer)
 ```
 
 These assignment operators are shorthand for applying method operators to the current value.
@@ -506,7 +506,7 @@ GDScript uses integers as enums. It suffers from poor debugging readability.
 
 Holo uses enums as a type of box that can be created with `enum` or `enum.new`. They contain a name:string and a value:number.
 ```
-entity_type := enum(
+var entity_type := enum (
   player = 1,
   animal = 2,
 )
@@ -514,14 +514,14 @@ entity_type := enum(
 log(entity_type.get("player").name) # "player"
 log(entity_type.get("animal").value) # 2
 
-log (entity_type.animal.name) # calls missing method; same as entity_type.get("animal").name
+log(entity_type.animal.name) # calls missing method; same as entity_type.get("animal").name
 ```
 
 ### Events
 
 Events can be awaited and connected easily.
 ```
-on_fire := event.new()
+var on_fire := event.new()
 on_fire.invoke()
 on_fire.wait()
 on_fire.hook(sub()
@@ -541,7 +541,7 @@ log(3)
 
 If you need to lock over asynchronous methods, you can use a mutex, which limits the number of calls that can run at the same time.
 ```
-mutex1 := mutex.new(1)
+var mutex1 := mutex.new(1)
 mutex1.run(sub()
   # ...
 end)
