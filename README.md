@@ -893,3 +893,15 @@ Generate pseudo-random numbers.
 - `int(range1:range):int` - returns a random integer in the range
 - `dec(min:num, max:num):dec` - returns a random decimal from min to max
 - `dec(range1:range):dec` - returns a random decimal in the range
+
+### Versioning Guide
+
+Holo uses versions like "1.0" and "2.4".
+
+For developers:
+- Increment the major version when adding new features or making breaking changes.
+- Increment the minor version when fixing bugs or making small improvements.
+
+For users:
+- You usually want the latest major version, although it may require some changes to your project.
+- You always want the latest minor version, and there should not be any issues upgrading.
