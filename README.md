@@ -1,6 +1,6 @@
 # Holo
 
-Holo is a unique scripting language inspired by Ruby and Lua. It aims for:
+Holo is a scripting language inspired by Ruby, Lua and C#. It aims for:
 - Simplicity (keep it simple)
 - Expressiveness (code your way)
 - Embeddability (with .NET)
@@ -38,22 +38,19 @@ log fibonacci(10)
 ### Orientation
 
 Holo uses "boxes" which serve as templates and instances.
-Like Ruby, boxes expose methods, not variables.
-Like Lua, there is no static/instance distinction.
+Boxes contain methods and variables, which are both public by default.
 There are no value types.
 
 ### Statements
 
-Like Lua, code is separated into statements and expressions.
-If there's only one expression (e.g. in a method body) it may be parsed as a statement.
-Like Ruby, newlines are significant.
-Like Lua, spaces/tabs are insignificant.
+Code is separated into statements and expressions.
+Newlines are significant but spaces/tabs are ignored.
 Assignment is not a valid expression.
 
 ### Variables
 
 Variables are declared with `var` and an optional type and value.
-If no type is provided, it infers the type by calling `identify()` on the value.
+If no type is provided, it infers the type by calling `class()` on the value.
 If no value is provided, it defaults to `null`.
 ```
 var cats:int = 3
@@ -349,7 +346,7 @@ end
 ### Tables
 
 Tables are a type of box that store key-value pairs.
-If the key is omitted, they use one-based indexing (like Lua).
+If the key is omitted, one-based indexing is used (like Lua).
 They can be created with square brackets.
 ```
 var nicknames = [
@@ -607,6 +604,8 @@ Every box includes box, even if not in the `components` table.
 - `components():table` - returns the boxes included in this box
 - `variables():table` - returns a table of [name, [value, type, is_nullable]]
 - `methods():table` - returns a table of [name, proc] (includes extension methods)
+- `variable(name:str):table` - returns the [value, type, is_nullable] with the given name
+- `method(name:str):proc` - returns the method with the given name
 - `eval(code:method):box` - executes the method in the box context
 - `eval(code:str):box` - parses and executes the code in the box context
 - `hash_code():int` - returns a lookup number
@@ -794,7 +793,8 @@ A range between two inclusive numbers.
 
 A box containing a method and a target. The method is internal since methods aren't boxes.
 - `stringify():str` - returns ""
-- `call(..arguments):box?` - calls the method on the target
+- `call(..arguments):box?` - calls the best overload on the target
+- `overloads():table` - returns a table of method overloads
 - `target():box` - returns the method target
 - `set_target(target:box):null` - sets the method target
 
