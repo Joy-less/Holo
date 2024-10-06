@@ -41,9 +41,9 @@ log(count) # null
 count = null # throws error
 ```
 
-Variable identifiers can contain symbols if wrapped in brackets.
+Variable identifiers can contain symbols if wrapped in backticks.
 ```
-var (~#:@!) = 5
+var `~#:@!` = 5
 ```
 
 ### Scopes
@@ -401,19 +401,19 @@ box ??= value
 
 These operators are shorthand for method calls.
 ```
-0 == 1              # 0.(==)(1)
-0 != 1              # 0.(!=)(1)
-0 > 1               # 0.(>)(1)
-0 < 1               # 0.(<)(1)
-0 >= 1              # 0.(>=)(1)
-0 <= 1              # 0.(<=)(1)
-0 + 1               # 0.(+)(1)
-0 - 1               # 0.(-)(1)
-0 * 1               # 0.(*)(1)
-0 / 1               # 0.(/)(1)
-0 // 1              # 0.(/)(1).truncate()
-0 % 1               # 0.(%)(1)
-0 ^ 1               # 0.(^)(1)
+0 == 1              # 0.`==`(1)
+0 != 1              # 0.`!=`(1)
+0 > 1               # 0.`>`(1)
+0 < 1               # 0.`<`(1)
+0 >= 1              # 0.`>=`(1)
+0 <= 1              # 0.`<=`(1)
+0 + 1               # 0.`+`(1)
+0 - 1               # 0.`-`(1)
+0 * 1               # 0.`*`(1)
+0 / 1               # 0.`/`(1)
+0 // 1              # 0.`/`(1).truncate()
+0 % 1               # 0.`%`(1)
+0 ^ 1               # 0.`^`(1)
 0 in [1, 2, 3]      # [1, 2, 3].contains(0)
 0 not_in [1, 2, 3]  # not [1, 2, 3].contains(0)
 0 is integer        # 0.includes(integer)
