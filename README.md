@@ -25,15 +25,25 @@ Assignment is not a valid expression.
 ### Variables
 
 Variables are declared with `var` and an optional type and value.
+If no type is provided, it infers the type by calling `identify()` on the value.
+If no value is provided, it defaults to `null`.
 ```
 var cats:int = 3
 cats = 4
-var dogs := 2
+var dogs = 2
 ```
 
-Variable identifiers can be anything if wrapped in backticks.
+Type annotations are only enforced when assigning a value.
+So while every variable can be `null`, an error is thrown if `null` is assigned unless the type is annotated with `?`.
 ```
-var `~#:@!` := 5
+var count:int
+log(count) # null
+count = null # throws error
+```
+
+Variable identifiers can contain symbols if wrapped in brackets.
+```
+var (~#:@!) = 5
 ```
 
 ### Scopes
@@ -56,8 +66,8 @@ end
 
 Holo has two number types: integers and decimals. Both are signed and arbitrarily large and precise (like Ruby).
 ```
-var int1 := 3
-var dec1 := 6.2
+var int1 = 3
+var dec1 = 6.2
 ```
 
 ### Strings
@@ -65,16 +75,16 @@ var dec1 := 6.2
 Strings are immutable and can span multiple lines.
 Double-quotes parse escape sequences whereas single-quotes ignore them (like Ruby).
 ```
-var string1 := "formatted"
-var string2 := 'not formatted'
+var string1 = "formatted"
+var string2 = 'not formatted'
 ```
 
 Triple quotes trim the whitespace to the left of the closing quotes.
 ```
-var string1 := """
+var string1 = """
     formatted
     """
-var string2 := '''
+var string2 = '''
     not formatted
     '''
 ```
@@ -110,7 +120,7 @@ Both methods and variables are public by default.
 Methods have higher priority in dot notation, whereas variables have higher priority when named.
 
 ```
-var cat := {
+var cat = {
   include animal
   include pathfinding
 
@@ -122,8 +132,8 @@ var cat := {
 
 To instantiate a box, call the `new` method which clones the box and calls the `init` method.
 ```
-var cat := {
-  name:str
+var cat = {
+  var name:str
 
   sub init(name:str)
     self.name = name
@@ -157,7 +167,7 @@ meow
 
 Anonymous methods are declared with `sub` and wrapped in a method box. Brackets are mandatory.
 ```
-var meow := sub()
+var meow = sub()
   log("nya")
 end
 meow.call
@@ -190,7 +200,7 @@ var one, ..two_three = [1, 2, 3]
 
 Assignments on a box are translated to method calls (like Ruby).
 ```
-var cat := {
+var cat = {
   sub set_name(name:str)
     # ...
   end
@@ -200,7 +210,7 @@ cat.name = "Robbie"
 
 Missing methods can be caught with `missing` and `set_missing` methods.
 ```
-var cat := {
+var cat = {
   sub missing(method)
     # ...
   end
@@ -233,7 +243,7 @@ cat.say(message = "meow")
 Extension methods are methods that refer to another box.
 When calling a method, extension methods take priority over normal methods.
 ```
-var extensions := {
+var extensions = {
   sub cat.say(message)
     # ...
   end
@@ -256,8 +266,8 @@ end
 
 The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
 ```
-var toy_box := {
-  contents:types(1)
+var toy_box = {
+  var contents:types(1)
 
   # example overload
   sub of(types:table):null
@@ -265,29 +275,29 @@ var toy_box := {
   end
 }
 
-var toy_box1 := toy_box(of int).new()
+var toy_box1 = toy_box(of int).new()
 toy_box1.contents = "ball" # error
 ```
 
 Example using `self` as a type:
 ```
-var animal := {
-  sub deep_fake:self
+var animal = {
+  sub deep_fake():self
     return self.new
   end
 }
-var cat := {
+var cat = {
   include animal
 }
-var fake_cat := cat.deep_fake # fake_cat:cat
+var fake_cat = cat.deep_fake # fake_cat:cat
 ```
 
 Examples of typing tables:
 ```
-var items := ["red", "blue", "green"](of int, string)
+var items = ["red", "blue", "green"](of int, string)
 ```
 ```
-var items:table(of int, string) := ["red", "blue", "green"]
+var items:table(of int, string) = ["red", "blue", "green"]
 ```
 
 ### Casts
@@ -314,7 +324,7 @@ Tables are a type of box that store key-value pairs.
 If the key is omitted, they use one-based indexing (like Lua).
 They can be created with square brackets.
 ```
-var nicknames := [
+var nicknames = [
   "Kirito" = "Black Swordsman",
   "Asuna" = "Lightning Flash",
 ]
@@ -326,7 +336,7 @@ end
 
 Tables can be joined using the surplus operator.
 ```
-var joined := [..table1, ..table2]
+var joined = [..table1, ..table2]
 ```
 
 ### Attributes
@@ -391,19 +401,19 @@ box ??= value
 
 These operators are shorthand for method calls.
 ```
-0 == 1              # 0.`==`(1)
-0 != 1              # 0.`!=`(1)
-0 > 1               # 0.`>`(1)
-0 < 1               # 0.`<`(1)
-0 >= 1              # 0.`>=`(1)
-0 <= 1              # 0.`<=`(1)
-0 + 1               # 0.`+`(1)
-0 - 1               # 0.`-`(1)
-0 * 1               # 0.`*`(1)
-0 / 1               # 0.`/`(1)
-0 // 1              # 0.`/`(1).truncate()
-0 % 1               # 0.`%`(1)
-0 ^ 1               # 0.`^`(1)
+0 == 1              # 0.(==)(1)
+0 != 1              # 0.(!=)(1)
+0 > 1               # 0.(>)(1)
+0 < 1               # 0.(<)(1)
+0 >= 1              # 0.(>=)(1)
+0 <= 1              # 0.(<=)(1)
+0 + 1               # 0.(+)(1)
+0 - 1               # 0.(-)(1)
+0 * 1               # 0.(*)(1)
+0 / 1               # 0.(/)(1)
+0 // 1              # 0.(/)(1).truncate()
+0 % 1               # 0.(%)(1)
+0 ^ 1               # 0.(^)(1)
 0 in [1, 2, 3]      # [1, 2, 3].contains(0)
 0 not_in [1, 2, 3]  # not [1, 2, 3].contains(0)
 0 is integer        # 0.includes(integer)
@@ -506,7 +516,7 @@ GDScript uses integers as enums. It suffers from poor debugging readability.
 
 Holo uses enums as a type of box that can be created with `enum` or `enum.new`. They contain a name:string and a value:number.
 ```
-var entity_type := enum (
+var entity_type = enum (
   player = 1,
   animal = 2,
 )
@@ -521,7 +531,7 @@ log(entity_type.animal.name) # calls missing method; same as entity_type.get("an
 
 Events can be awaited and connected easily.
 ```
-var on_fire := event.new()
+var on_fire = event.new()
 on_fire.invoke()
 on_fire.wait()
 on_fire.hook(sub()
@@ -541,7 +551,7 @@ log(3)
 
 If you need to lock over asynchronous methods, you can use a mutex, which limits the number of calls that can run at the same time.
 ```
-var mutex1 := mutex.new(1)
+var mutex1 = mutex.new(1)
 mutex1.run(sub()
   # ...
 end)
@@ -560,28 +570,31 @@ label hello
 #### box
 
 Every box includes box, even if not in the `components` table.
-- `type():str` - returns "box"
-- `stringify():str` - calls `type()`
-- `new():self` - instantiates a new box with this box as a component
+- `stringify():str` - returns "box"
+- `new(..params):self` - creates a new box, adding this box as a component, setting `class()` to return this box, and calling `init(params)`
+- `init(..params):null` - default initialise method
+- `class():box` - returns self
+- `types():table` - returns the generic types
+- `types(index:box):box` - returns the generic type at the given index
 - `components():table` - returns the boxes included in this box
-- `variables():table` - returns a table of [name, [type, value]]
+- `variables():table` - returns a table of [name, [value, type, is_nullable]]
 - `methods():table` - returns a table of [name, proc] (includes extension methods)
 - `eval(code:method):box` - executes the method in the box context
-- `hash_code():int` - returns a lookup number
 - `eval(code:str):box` - parses and executes the code in the box context
+- `hash_code():int` - returns a lookup number
 - `==(other:box):bool` - returns true if both boxes have the same reference
-- `!=(other:box):bool` - calls `==` and returns the opposite
-- `<=>(other:box):bool` - calls comparison operators (may not be needed, only include if required for table lookups)
+- `!=(other:box):bool` - calls `==` and inverses with `not`
+- `<=>(other:box):bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
 
 #### null
 
-A box representing no box. Type annotations exclude null unless they have a question mark (`?`).
-- `type():str` - returns "null"
+A box representing no box.
+- `stringify():str` - returns "null"
 
 #### global
 
-The global box methods can be called from anywhere. They have a higher precedence than methods in `self`.
-- `type():str` - returns "global"
+A box containing methods that can be called as if they were in `self`.
+- `stringify():str` - returns "global"
 - `log(..messages):null` - logs each message to the standard output
 - `warn(..messages):null` - logs each warning message to the standard output
 - `throw(message:box):null` - creates an exception and throws it
@@ -599,7 +612,6 @@ The global box methods can be called from anywhere. They have a higher precedenc
 #### boolean (bool)
 
 Has two instances: `true` and `false`.
-- `type():str` - returns "boolean"
 - `stringify():str` - returns "true" if equals `true`, otherwise "false"
 
 #### string (str) (includes sequence)
