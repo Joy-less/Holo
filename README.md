@@ -149,7 +149,7 @@ var cat = {
   include animal
   include pathfinding
 
-  sub meow
+  sub meow()
     log("nya")
   end
 }
@@ -182,7 +182,7 @@ cat.eval(sub()
 end)
 ```
 
-Methods are declared with `sub name`. Brackets are mandatory if they have arguments.
+Methods are declared with `sub name()`. Brackets are mandatory.
 ```
 sub meow()
   log("nya")
@@ -190,7 +190,7 @@ end
 meow
 ```
 
-Anonymous methods are declared with `sub` and wrapped in a method box. Brackets are mandatory.
+Anonymous methods (stored in method boxes) are declared with `sub()`. Brackets are mandatory.
 ```
 var meow = sub()
   log("nya")
@@ -289,10 +289,10 @@ sub increment(value:num):value
 end
 ```
 
-The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `types()` or `types(key)`.
+The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `generics()` or `generic(index)`.
 ```
 var toy_box = {
-  var contents:types(1)
+  var contents:generic(1)
 
   # example overload
   sub of(types:table):null
@@ -592,20 +592,22 @@ label hello
 
 ### Standard Library
 
+For simplicity, generic types (`(of ...)`) have not been annotated.
+
 #### box
 
 Every box includes box, even if not in the `components` table.
 - `stringify():str` - returns "box"
-- `new(..params):self` - creates a new box, adding this box as a component, setting `class()` to return this box, and calling `init(params)`
+- `new(..params):self` - creates a new box, adding this box as a component, setting `class` to return this box, and calling `init(params)`
 - `init(..params):null` - default initialise method
 - `class():box` - returns self
-- `types():table` - returns the generic types
-- `types(index:box):box` - returns the generic type at the given index
+- `generics():table` - returns the generic types
+- `generic(index:box):box` - returns the generic type at the given index or null
 - `components():table` - returns the boxes included in this box
-- `variables():table` - returns a table of [name, [value, type, is_nullable]]
-- `methods():table` - returns a table of [name, proc] (includes extension methods)
-- `variable(name:str):table` - returns the [value, type, is_nullable] with the given name
-- `method(name:str):proc` - returns the method with the given name
+- `variables():table` - returns a table of [name, variable]
+- `methods():table` - returns a table of [name, method_box] (includes extension methods)
+- `variable(name:str):variable` - returns the variable with the given name
+- `method(name:str):method_box` - returns the method with the given name
 - `eval(code:method):box` - executes the method in the box context
 - `eval(code:str):box` - parses and executes the code in the box context
 - `hash_code():int` - returns a lookup number
@@ -628,11 +630,11 @@ A box containing methods that can be called as if they were in `self`.
 - `throw(exception1:exception):null` - throws the exception
 - `input():str` - reads and returns a line of user input
 - `wait(duration:num = 0.001):dec` - yields for the duration in seconds and returns the exact amount of time waited
-- `local_variables():table` - returns a table of variable names
+- `local_variables():table` - returns a table of [name, variable]
 - `rand(range1:range):num` - calls `random.rand` and returns a random number in the range
 - `rand(max:num):max` - calls `random.rand` and returns a random number in the range
 - `exit(code:int = 0):null` - exits the application with the given exit code
-- `quit(code:int = 0):null` - calls `exit()`
+- `quit(code:int = 0):null` - calls `exit`
 - `holo_version():str` - returns the Holo language version
 - `holo_copyright():str` - returns the Holo language copyrights
 
@@ -689,14 +691,14 @@ The base component for integers and decimals.
 
 A signed whole number with arbitrary size and precision.
 - `stringify():str` - returns the integer as a string
-- `parse(str1:str):int` - converts the string to an integer
+- `parse(str1:str):int` - converts the string to an integer or throws
 - `parse_or_null(str1:str?):int?` - converts the string to an integer or returns null
 
 #### decimal (dec)
 
 A signed fractional number with arbitrary size and precision.
 - `stringify():str` - returns the decimal as a string
-- `parse(str1:str):dec` - converts the string to a decimal
+- `parse(str1:str):dec` - converts the string to a decimal or throws
 - `parse_or_null(str1:str?):dec?` - converts the string to a decimal or returns null
 
 #### iterator
@@ -730,13 +732,13 @@ An iterable, deferred sequence of items.
 - `remove_last(count:int = 1)` - removes the last count items
 - `remove_duplicates():sequence` - removes duplicate items
 - `clear():sequence` - removes all items
-- `first(predicate:method):box` - returns the first item matching the predicate
+- `first(predicate:method):box` - returns the first item matching the predicate or throws
 - `first_or_null(predicate:method):box?` - returns the first item matching the predicate or null
-- `first():box` - returns the first item
+- `first():box` - returns the first item or throws
 - `first_or_null():box` - returns the first item or null
-- `last(predicate:method):box` - returns the last item matching the predicate
+- `last(predicate:method):box` - returns the last item matching the predicate or throws
 - `last_or_null(predicate:method):box?` - returns the last item matching the predicate or null
-- `last():box` - returns the last item
+- `last():box` - returns the last item or throws
 - `last_or_null():box` - returns the last item or null
 - `max(value:method? = null):num` - gets the biggest value in the sequence of numbers
 - `min(value:method? = null):num` - gets the smallest value in the sequence of numbers
@@ -745,18 +747,18 @@ An iterable, deferred sequence of items.
 - `product():num` - multiplies all items in the sequence of numbers
 - `sort(comparer:method? = null):sequence` - sorts the sequence into an order using the comparer
 - `reverse():sequence` - reverses the order of the sequence
-- `clone():sequence` - shallow-copies the sequence into another sequence
+- `copy():sequence` - shallow-copies the sequence into another sequence
 
 #### table (includes sequence)
 
 An sequence of key-value pairs.
 - `stringify():str` - returns a string like "[a = b, c = d]"
-- `each():iterator` - returns an iterator for each entry
+- `each():iterator` - returns an iterator for each (key, value)
 - `add(value:box):table` - adds a value at the key one above the highest ordinal key
 - `add_each(values:table):table` - adds each value at the keys one above the highest ordinal key
 - `set(entry1:entry):table` - adds an entry to the table
 - `set(key:box, value:box):table` - creates and adds an entry to the table
-- `get(key:box):box` - finds a value from the key
+- `get(key:box):box` - finds a value from the key or throws
 - `get_or_null(key:box?):box?` - finds a value from the key or returns null
 - `keys():table` - returns a table of keys
 - `values():table` - returns a table of values
@@ -772,10 +774,12 @@ An sequence of key-value pairs.
 
 #### entry
 
-A key-value pair in a table.
+A key-value pair.
 - `stringify():str` - returns (key + " = " + value)
 - `key():box` - returns the key
+- `set_key(key:box):null` - sets the key
 - `value():box` - returns the value
+- `set_value(value:box):null` - sets the value
 
 #### range (includes sequence)
 
@@ -789,14 +793,24 @@ A range between two inclusive numbers.
 - `step():step` - returns the step value
 - `set_step(value:num):null` - sets the step value
 
-#### procedure (proc)
+#### method_box
 
-A box containing a method and a target. The method is internal since methods aren't boxes.
-- `stringify():str` - returns ""
+A box containing a method and a target.
+- `stringify():str` - returns (`target.stringify` + "." + `method_name`)
 - `call(..arguments):box?` - calls the best overload on the target
 - `overloads():table` - returns a table of method overloads
 - `target():box` - returns the method target
 - `set_target(target:box):null` - sets the method target
+- `method_name():str` - returns the method name
+- `set_method_name(name:str):null` - sets the method name
+
+#### variable
+
+A box containing information about a variable.
+- `stringify():str` - returns (``)
+- `name():str` - returns the variable name
+- `value():box?` - returns the variable value
+- `types():table` - returns the allowed types of the variable
 
 #### time
 
@@ -824,7 +838,7 @@ A date and time in the Gregorian calendar.
 - `set_second(value:num):null` - sets the second component
 - `offset():dec` - returns the offset component
 - `set_offset(value:num):null` - sets the offset component
-- `parse(time1:str):time` - converts the string to a time
+- `parse(time1:str):time` - converts the string to a time or throws
 - `parse_or_null(time1:str?):time?` - converts the string to a time or returns null
 
 #### span
@@ -842,7 +856,7 @@ A period of time.
 - `set_minute(value:num):null` - sets the minute component
 - `second():dec` - returns the second component
 - `set_second(value:num):null` - sets the second component
-- `parse(span1:str):span` - converts the string to a span
+- `parse(span1:str):span` - converts the string to a span or throws
 - `parse_or_null(span1:str?):span?` - converts the string to a span or returns null
 
 #### exception
@@ -944,3 +958,8 @@ For developers:
 For users:
 - You usually want the latest major version, although it may require some changes to your project.
 - You always want the latest minor version, and there should not be any issues upgrading.
+
+### Style Guide
+
+- Avoid redundant words (e.g. `hash_code()` not `get_hash_code()`)
+- Append a number starting from 1 to avoid naming collisions (e.g. `i1` not `i2`/`j`)
