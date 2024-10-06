@@ -223,15 +223,23 @@ sub say(message)
 end
 ```
 
-Box methods can be defined without the `eval` method.
-```
-sub cat.say(message)
-end
-```
-
 Arguments can be passed by name.
 ```
 cat.say(message = "meow")
+```
+
+### Extension Methods
+
+Extension methods are methods that refer to another box.
+When calling a method, extension methods take priority over normal methods.
+```
+extensions := {
+  sub cat.say(message)
+    # ...
+  end
+}
+include extensions
+cat.say("nyan")
 ```
 
 ### Type Annotations
@@ -552,12 +560,12 @@ label hello
 #### box
 
 Every box includes box, even if not in the `components` table.
-- `stringify():str` - returns "box"
 - `type():str` - returns "box"
+- `stringify():str` - calls `type()`
 - `new():self` - instantiates a new box with this box as a component
 - `components():table` - returns the boxes included in this box
-- `variables():table` - returns a table of variable names
-- `methods():table` - returns a table of method names
+- `variables():table` - returns a table of [name, [type, value]]
+- `methods():table` - returns a table of [name, proc] (includes extension methods)
 - `eval(code:method):box` - executes the method in the box context
 - `hash_code():int` - returns a lookup number
 - `eval(code:str):box` - parses and executes the code in the box context
@@ -568,7 +576,6 @@ Every box includes box, even if not in the `components` table.
 #### null
 
 A box representing no box. Type annotations exclude null unless they have a question mark (`?`).
-- `stringify():str` - returns "null"
 - `type():str` - returns "null"
 
 #### global
@@ -592,14 +599,14 @@ The global box methods can be called from anywhere. They have a higher precedenc
 #### boolean (bool)
 
 Has two instances: `true` and `false`.
-- `stringify():str` - returns "true" if equals `true`, otherwise "false"
 - `type():str` - returns "boolean"
+- `stringify():str` - returns "true" if equals `true`, otherwise "false"
 
 #### string (str) (includes sequence)
 
 An immutable sequence of characters.
-- `stringify():str` - returns self
 - `type():str` - returns "string"
+- `stringify():str` - returns self
 - `count():int` - returns the number of characters
 - `count(sequence:str):int` - returns the number of times the sequence appears
 - `length():int` - calls `count()`
@@ -628,8 +635,8 @@ An immutable sequence of characters.
 #### [abstract] number (num)
 
 The base component for integers and decimals.
-- `stringify():str` - returns "number"
 - `type():str` - returns "number"
+- `stringify():str` - returns "number"
 - `to_dec():dec` - converts the number to a decimal
 - `convert_angle(from:angle_type, to:angle_type):num` - converts the angle between different types (degrees, radians, gradians, turns)
 - `sqrt():num` - returns the square root of the number
@@ -644,32 +651,32 @@ The base component for integers and decimals.
 #### integer (int)
 
 A signed whole number with arbitrary size and precision.
-- `stringify():str` - returns the integer as a string
 - `type():str` - returns "integer"
+- `stringify():str` - returns the integer as a string
 - `parse(str1:str):int` - converts the string to an integer
 - `parse_or_null(str1:str?):int?` - converts the string to an integer or returns null
 
 #### decimal (dec)
 
 A signed fractional number with arbitrary size and precision.
-- `stringify():str` - returns the decimal as a string
 - `type():str` - returns "decimal"
+- `stringify():str` - returns the decimal as a string
 - `parse(str1:str):dec` - converts the string to a decimal
 - `parse_or_null(str1:str?):dec?` - converts the string to a decimal or returns null
 
 #### iterator
 
 Gets each item in a sequence.
-- `stringify():str` - returns "iterator"
 - `type():str` - returns "iterator"
+- `stringify():str` - returns "iterator"
 - `current():table` - returns the current items in the sequence
 - `move_next():bool` - tries to increment the sequence position
 
 #### sequence
 
 An iterable, deferred sequence of items.
-- `stringify():str` - concatenates the sequence to a string separated by commas enclosed in square brackets
 - `type():str` - returns "sequence"
+- `stringify():str` - returns "sequence"
 - `each():iterator` - returns an iterator for each item
 - `to_table():table` - adds each item to a new table
 - `append(item:box):sequence` - adds an item to the end of the sequence
@@ -711,7 +718,8 @@ An iterable, deferred sequence of items.
 
 An sequence of key-value pairs.
 - `type():str` - returns "table"
-- `each():iterator` - returns an iterator for each [value, key]
+- `stringify():str` - returns a string like "[a = b, c = d]"
+- `each():iterator` - returns an iterator for each entry
 - `add(value:box):table` - adds a value at the key one above the highest ordinal key
 - `add_each(values:table):table` - adds each value at the keys one above the highest ordinal key
 - `set(entry1:entry):table` - adds an entry to the table
@@ -727,12 +735,14 @@ An sequence of key-value pairs.
 - `invert():table` - swaps the keys and values
 - `weak():bool` - returns true if the values are weakly referenced
 - `set_weak(value:bool):null` - references values weakly so they can be garbage collected
+- `on_set():event` - returns an event that's invoked when a value is set
+- `on_get():event` - returns an event that's invoked when a value is gotten
 
 #### entry
 
 A key-value pair in a table.
-- `stringify():str` - returns (key + " = " + value)
 - `type():str` - returns "entry"
+- `stringify():str` - returns (key + " = " + value)
 - `key():box` - returns the key
 - `value():box` - returns the value
 
@@ -749,12 +759,21 @@ A range between two inclusive numbers.
 - `step():step` - returns the step value
 - `set_step(value:num):null` - sets the step value
 
+#### procedure (proc)
+
+A box containing a method and a target. The method is internal since methods aren't boxes.
+- `type():str` - returns "procedure"
+- `stringify():str` - returns ""
+- `call(..arguments):box?` - calls the method on the target
+- `target():box` - returns the method target
+- `set_target(target:box):null` - sets the method target
+
 #### time
 
 A date and time in the Gregorian calendar.
+- `type():str` - returns "time"
 - `stringify(format:str):str` - returns the time formatted with the given (.NET) format string
 - `stringify():str` - returns the time formatted like "2024/08/04 15:46 +0000"
-- `type():str` - returns "time"
 - `new(total_seconds:num)` - returns a new time
 - `new(year:num, month:num, day:num, hour:num, minute:num, second:num, offset:num = 0)` - returns a new time
 - `new(year:num, month:num, day:num, offset:num = 0)` - returns a new time
@@ -782,9 +801,9 @@ A date and time in the Gregorian calendar.
 #### span
 
 A period of time.
+- `type():str` - returns "span"
 - `stringify(format:str):str` - returns the span formatted with the given (.NET) format string
 - `stringify():str` - returns the span formatted like "00:14:23.1294"
-- `type():str` - returns "span"
 - `new(total_seconds:num)` - returns a new span
 - `new(hours:num, minutes:num, seconds:num)` - returns a new span
 - `total_seconds():dec` - returns the total number of seconds
@@ -801,18 +820,18 @@ A period of time.
 #### exception
 
 An error or control code thrown up the call stack.
-- `stringify():str` - returns (`message()` + "\n" + `strack_trace()`)
 - `type():str` - returns "exception"
+- `stringify():str` - returns (`message()` + "\n" + `strack_trace()`)
 - `new(message:box? = null)` - returns an exception instance with the given message
 - `message():box` - returns the exception message
 - `set_message():str` - sets the exception message
 - `stack_trace():table` - returns each line of the call stack (including external lines from C#)
 
-#### weak_ref
+#### weak_reference (weak_ref)
 
 Holds a reference to a box without preventing it from being garbage collected.
+- `type():str` - returns "weak_reference"
 - `stringify():str` - returns (`message()` + "\n" + `stack_trace()`)
-- `type():str` - returns "weak_ref"
 - `context():box` - returns the weakly referenced box
 - `set_context(value:box):null` - sets the weakly referenced box
 - `is_alive():bool` - returns true if the weak reference is still valid
@@ -820,6 +839,7 @@ Holds a reference to a box without preventing it from being garbage collected.
 #### thread
 
 Runs code in the background collaboratively.
+- `type():str` - returns "thread"
 - `run(method1:method, arguments:table = []):thread` - calls a method in the thread
 - `wait():` - waits for the thread to finish
 
