@@ -215,8 +215,8 @@ method("say").call # Call the best overload
 method("say").overloads.first.call # Call the first overload
 ```
 
-Surplus arguments can be caught with the surplus operator.
-There can only be one surplus operator, but it can be in any order (e.g. `a, ..b, c`).
+Excess arguments can be caught with the excess operator.
+There can only be one excess operator, but it can be in any order (e.g. `a, ..b, c`).
 ```
 sub say(..things)
   for thing in things
@@ -224,7 +224,7 @@ sub say(..things)
   end
 end
 
-var one, ..two_three = [1, 2, 3]
+var one, ..two_three := [1, 2, 3]
 ```
 
 Assignments on a box are translated to method calls (similar to Ruby).
@@ -363,7 +363,7 @@ for nickname in nicknames
 end
 ```
 
-Tables can be joined using the surplus operator.
+Tables can be joined using the excess operator.
 ```
 var joined := [..table1, ..table2]
 ```
