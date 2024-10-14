@@ -272,12 +272,12 @@ Cat.say(message = "meow")
 Extension methods are methods that refer to another box.
 When calling a method, extension methods take priority over normal methods.
 ```
-var extensions = {
+var Extensions := {
   sub Cat.say(message)
     # ...
   end
 }
-include extensions
+include Extensions
 Cat.say("nyan")
 ```
 
@@ -304,7 +304,7 @@ var ToyBox := {
   end
 }
 
-var toy_box = ToyBox(of int).new()
+var toy_box := ToyBox(of int).new()
 toy_box.contents = "ball" # error
 ```
 
@@ -318,15 +318,15 @@ var Animal := {
 var Cat := {
   include Animal
 }
-var fake_cat = Cat.deep_fake # fake_cat:Cat
+var fake_cat := Cat.deep_fake # fake_cat:Cat
 ```
 
 Examples of typing tables:
 ```
-var items = ["red", "blue", "green"](of int, string)
+var items := ["red", "blue", "green"](of int, string)
 ```
 ```
-var items:Table(of int, string) = ["red", "blue", "green"]
+var items:Table(of int, string) := ["red", "blue", "green"]
 ```
 
 ### Casts
