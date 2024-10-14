@@ -128,6 +128,8 @@ Escape sequences start with a backslash. Any unrecognised escape sequence is a s
 "tab: \t"
 "backspace: \b"
 "alert: \a"
+"binary: \0bInteger"
+"hexadecimal: \0xInteger"
 ```
 
 ### Ranges
