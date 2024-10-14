@@ -9,15 +9,15 @@ Holo is a scripting language inspired by Ruby, Lua and C#. It aims for:
 
 ### FizzBuzz
 ```
-sub fizzbuzz(n)
-  for i in 1 to n
-    if i % 3 == 0 and i % 5 == 0
+sub fizzbuzz(n) do
+  for i in 1 to n do
+    if i % 3 == 0 and i % 5 == 0 do
       log "FizzBuzz"
-    elseif i % 3 == 0
+    elseif i % 3 == 0 do
       log "Fizz"
-    elseif i % 5 == 0
+    elseif i % 5 == 0 do
       log "Buzz"
-    else
+    else do
       log i
     end
   end
@@ -50,25 +50,28 @@ Assignment is not a valid expression.
 ### Variables
 
 Variables are declared with `var` and an optional type and value.
-If no type is provided, it infers the type by calling `class()` on the value.
-If no value is provided, it defaults to `null`.
 ```
-var cats:int = 3
+var cats:Int = 3
 cats = 4
-var dogs = 2
 ```
 
-Type annotations are only enforced when assigning a value.
-So while every variable can be `null`, an error is thrown if `null` is assigned unless the type is annotated with `?`.
+The `:=` operator infers the type by calling `class()` on the value.
 ```
-var count:int
+var cats := 3
+```
+
+Variables default to `null`.
+An exception is thrown if a non-nullable variable is used before being assigned or is assigned `null`.
+Types can be made nullable with `?`.
+```
+var count:Int
 log(count) # throws error
 count = null # throws error
 ```
 
 Variable identifiers can contain symbols if wrapped in backticks.
 ```
-var `~#:@!` = 5
+var `~#:@!` := 5
 ```
 
 ### Scopes
@@ -80,7 +83,7 @@ if true do
 end
 ```
 
-`do` is optional if there's a keyword and a newline.
+You can omit `do` if there's a keyword and a newline.
 ```
 while true
   log("hi")
@@ -91,8 +94,8 @@ end
 
 Holo has two number types: integers and decimals. Both are signed and arbitrarily large and precise (like Ruby).
 ```
-var int1 = 3
-var dec1 = 6.2
+var int := 3
+var dec := 6.2
 ```
 
 ### Strings
@@ -100,16 +103,16 @@ var dec1 = 6.2
 Strings are immutable and can span multiple lines.
 Double-quotes parse escape sequences whereas single-quotes ignore them (like Ruby).
 ```
-var string1 = "formatted"
-var string2 = 'not formatted'
+var string := "formatted"
+var string2 := 'not formatted'
 ```
 
 Triple quotes trim the whitespace to the left of the closing quotes.
 ```
-var string1 = """
+var string := """
     formatted
     """
-var string2 = '''
+var string2 := '''
     not formatted
     '''
 ```
@@ -132,8 +135,8 @@ Escape sequences start with a backslash. Any unrecognised escape sequence is a s
 Ranges can be created with `min to max (step value)`.
 They are inclusive as Holo uses one-based indexing.
 ```
-var numbers:range = 1 to 10
-var odd_numbers:range = 1 to 10 step 2
+var numbers:Range = 1 to 10
+var odd_numbers:Range = 1 to 10 step 2
 ```
 
 ### Boxes
@@ -145,7 +148,7 @@ Both methods and variables are public by default.
 Methods have higher priority in dot notation, whereas variables have higher priority when named.
 
 ```
-var cat = {
+var Cat := {
   include animal
   include pathfinding
 
@@ -157,16 +160,15 @@ var cat = {
 
 To instantiate a box, call the `new` method which clones the box and calls the `init` method.
 ```
-var cat = {
-  var name:str
+var Cat := {
+  var name:Str
 
-  sub init(name:str)
+  sub init(name:Str)
     self.name = name
-    log("new cat")
   end
 }
 
-var tama = cat.new("Tama")
+var tama := Cat.new("Tama")
 ```
 
 ### Methods
@@ -200,10 +202,10 @@ meow.call
 
 Multiple overloads for a method are allowed.
 ```
-sub say(message:string)
+sub say(message:String)
   log(message)
 end
-sub say(message:int)
+sub say(message:Int)
   log(message)
 end
 
@@ -223,19 +225,19 @@ end
 var one, ..two_three = [1, 2, 3]
 ```
 
-Assignments on a box are translated to method calls (like Ruby).
+Assignments on a box are translated to method calls (similar to Ruby).
 ```
-var cat = {
-  sub set_name(name:str)
+var Cat := {
+  sub set_name(name:Str)
     # ...
   end
 }
-cat.name = "Robbie"
+Cat.name = "Robbie"
 ```
 
 Missing methods can be caught with `missing` and `set_missing` methods.
 ```
-var cat = {
+var Cat := {
   sub missing(method)
     # ...
   end
@@ -243,8 +245,8 @@ var cat = {
     # ...
   end
 }
-cat.length
-cat.length = 5
+Cat.length
+Cat.length = 5
 ```
 
 If a method is redefined, the original method can be called with the `origin` method.
@@ -260,7 +262,7 @@ end
 
 Arguments can be passed by name.
 ```
-cat.say(message = "meow")
+Cat.say(message = "meow")
 ```
 
 ### Extension Methods
@@ -269,12 +271,12 @@ Extension methods are methods that refer to another box.
 When calling a method, extension methods take priority over normal methods.
 ```
 var extensions = {
-  sub cat.say(message)
+  sub Cat.say(message)
     # ...
   end
 }
 include extensions
-cat.say("nyan")
+Cat.say("nyan")
 ```
 
 ### Type Annotations
@@ -283,7 +285,7 @@ Type annotations are treated as methods, which are called every time they are us
 
 This allows you to pass them as variables:
 ```
-sub increment(value:num):value
+sub increment(value:Num):value
   var big_value:value = value + 1
   return big_value
 end
@@ -291,30 +293,30 @@ end
 
 The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `generics()` or `generic(index)`.
 ```
-var toy_box = {
+var ToyBox := {
   var contents:generic(1)
 
-  # example overload
-  sub of(types:table):null
+  # Example overload
+  sub of(types:Table):null
     origin(types)
   end
 }
 
-var toy_box1 = toy_box(of int).new()
-toy_box1.contents = "ball" # error
+var toy_box = ToyBox(of int).new()
+toy_box.contents = "ball" # error
 ```
 
 Example using `self` as a type:
 ```
-var animal = {
+var Animal := {
   sub deep_fake():self
     return self.new
   end
 }
-var cat = {
-  include animal
+var Cat := {
+  include Animal
 }
-var fake_cat = cat.deep_fake # fake_cat:cat
+var fake_cat = Cat.deep_fake # fake_cat:Cat
 ```
 
 Examples of typing tables:
@@ -322,14 +324,14 @@ Examples of typing tables:
 var items = ["red", "blue", "green"](of int, string)
 ```
 ```
-var items:table(of int, string) = ["red", "blue", "green"]
+var items:Table(of int, string) = ["red", "blue", "green"]
 ```
 
 ### Casts
 
 When a box is assigned to a variable of a different type, it is cast to that type.
 ```
-var health:decimal = 100
+var health:Decimal = 100
 ```
 
 It does this by calling the `cast(to_type)` method.
@@ -349,7 +351,7 @@ Tables are a type of box that store key-value pairs.
 If the key is omitted, one-based indexing is used (like Lua).
 They can be created with square brackets.
 ```
-var nicknames = [
+var nicknames := [
   "Kirito" = "Black Swordsman",
   "Asuna" = "Lightning Flash",
 ]
@@ -361,7 +363,7 @@ end
 
 Tables can be joined using the surplus operator.
 ```
-var joined = [..table1, ..table2]
+var joined := [..table1, ..table2]
 ```
 
 ### Attributes
@@ -539,24 +541,24 @@ Ruby uses strings (symbols) as enums. It suffers from typos and doesn't support 
 
 GDScript uses integers as enums. It suffers from poor debugging readability.
 
-Holo uses enums as a type of box that can be created with `enum` or `enum.new`. They contain a name:string and a value:number.
+Holo uses enums as a type of box that can be created with `enum` or `Enum.new`. They contain a name:string and a value:number.
 ```
-var entity_type = enum (
-  player = 1,
-  animal = 2,
-)
+var entity_type := enum
+  player = 1
+  animal = 2
+end
 
 log(entity_type.get("player").name) # "player"
 log(entity_type.get("animal").value) # 2
 
-log(entity_type.animal.name) # calls missing method; same as entity_type.get("animal").name
+log(entity_type.animal.name) # calls missing method; works same as entity_type.get("animal").name
 ```
 
 ### Events
 
 Events can be awaited and connected easily.
 ```
-var on_fire = event.new()
+var on_fire := Event.new()
 on_fire.invoke()
 on_fire.wait()
 on_fire.hook(sub()
@@ -569,15 +571,15 @@ end)
 Holo uses collaborative multithreading with actors (like Lua/Luau). As such, race conditions are usually not a problem.
 ```
 log(1)
-log(2) # actor is locked between log(1) and log(2)
+log(2) # Actor is locked between log(1) and log(2)
 wait()
 log(3)
 ```
 
 If you need to lock over asynchronous methods, you can use a mutex, which limits the number of calls that can run at the same time.
 ```
-var mutex1 = mutex.new(1)
-mutex1.run(sub()
+var mutex = Mutex.new(1)
+mutex.run(sub()
   # ...
 end)
 ```
@@ -594,358 +596,381 @@ label hello
 
 For simplicity, generic types (`(of ...)`) have not been annotated.
 
-#### box
+#### Box
 
 Every box includes box, even if not in the `components` table.
-- `stringify():str` - returns "box"
+- `stringify():Str` - returns "box"
 - `new(..params):self` - creates a new box, adding this box as a component, setting `class` to return this box, and calling `init(params)`
 - `init(..params):null` - default initialise method
-- `class():box` - returns self
-- `generics():table` - returns the generic types
-- `generic(index:box):box` - returns the generic type at the given index or null
-- `components():table` - returns the boxes included in this box
-- `variables():table` - returns a table of [name, variable]
-- `methods():table` - returns a table of [name, method_box] (includes extension methods)
-- `variable(name:str):variable` - returns the variable with the given name
-- `method(name:str):method_box` - returns the method with the given name
-- `eval(code:method):box` - executes the method in the box context
-- `eval(code:str):box` - parses and executes the code in the box context
-- `hash_code():int` - returns a lookup number
-- `==(other:box):bool` - returns true if both boxes have the same reference
-- `!=(other:box):bool` - calls `==` and inverses with `not`
-- `<=>(other:box):bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
+- `class():Box` - returns self
+- `generics():Table` - returns the generic types
+- `generic(index:Box):Box` - returns the generic type at the given index or null
+- `components():Table` - returns the boxes included in this box
+- `variables():Table` - returns a table of [name, variable]
+- `methods():Table` - returns a table of [name, delegate] (includes extension methods)
+- `variable(name:Str):Variable` - returns the variable with the given name
+- `method(name:Str):Delegate` - returns the method with the given name
+- `eval(code:Delegate):Box` - executes the method in the box context
+- `eval(code:Str):Box` - parses and executes the code in the box context
+- `hash_code():Int` - returns a lookup number
+- `==(other:Box):Bool` - returns true if both boxes have the same reference
+- `!=(other:Box):Bool` - calls `==` and inverses with `not`
+- `<=>(other:Box):Bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
 
-#### null
+#### Null (null)
 
 A box representing no box.
-- `stringify():str` - returns "null"
+- `stringify():Str` - returns "null"
 
-#### global
+#### Global
 
 A box containing methods that can be called as if they were in `self`.
-- `stringify():str` - returns "global"
+- `stringify():Str` - returns "global"
 - `log(..messages):null` - logs each message to the standard output
 - `warn(..messages):null` - logs each warning message to the standard output
-- `throw(message:box):null` - creates an exception and throws it
-- `throw(exception1:exception):null` - throws the exception
-- `input():str` - reads and returns a line of user input
-- `wait(duration:num = 0.001):dec` - yields for the duration in seconds and returns the exact amount of time waited
-- `local_variables():table` - returns a table of [name, variable]
-- `rand(range1:range):num` - calls `random.rand` and returns a random number in the range
-- `rand(max:num):max` - calls `random.rand` and returns a random number in the range
-- `exit(code:int = 0):null` - exits the application with the given exit code
-- `quit(code:int = 0):null` - calls `exit`
-- `holo_version():str` - returns the Holo language version
-- `holo_copyright():str` - returns the Holo language copyrights
+- `throw(message:Box):null` - creates an exception and throws it
+- `throw(exception:Exception):null` - throws the exception
+- `input():Str` - reads and returns a line of user input
+- `wait(duration:Num = 0.001):Dec` - yields for the duration in seconds and returns the exact amount of time waited
+- `local_variables():Table` - returns a table of [name, variable]
+- `rand(range1:Range):Num` - calls `random.rand` and returns a random number in the range
+- `rand(max:Num):max` - calls `random.rand` and returns a random number in the range
+- `exit(code:Int = 0):null` - exits the application with the given exit code
+- `quit(code:Int = 0):null` - calls `exit`
+- `holo_version():Str` - returns the Holo language version
+- `holo_copyright():Str` - returns the Holo language copyrights
 
-#### boolean (bool)
+#### Boolean (Bool)
 
 Has two instances: `true` and `false`.
-- `stringify():str` - returns "true" if equals `true`, otherwise "false"
+- `stringify():Str` - returns "true" if equals `true`, otherwise "false"
 
-#### string (str) (includes sequence)
+#### String (Str) (includes Sequence)
 
 An immutable sequence of characters.
-- `stringify():str` - returns self
-- `count():int` - returns the number of characters
-- `count(sequence:str):int` - returns the number of times the sequence appears
-- `length():int` - calls `count()`
-- `characters():table` - gets a table of characters in the string
-- `trim(predicate:method? = null):str` - removes characters matching a predicate from the start and end of the string (defaults to whitespace)
-- `trim_start(predicate:method? = null):str` - removes characters matching a predicate from the start of the string (defaults to whitespace)
-- `trim_start(sequence:str):str` - removes the sequence from the start of the string
-- `trim_end(predicate:method? = null):str` - removes characters matching a predicate from the end of the string (defaults to whitespace)
-- `trim_end(sequence:str):str` - removes the sequence from the end of the string
-- `to_case(case:string_case_type):str` - converts the string to PascalCase, lowerCamelCase, snake_case, kebab-case, flatcase, Title Case, Sentence case
-- `to_upper():str` - converts letters in the string to uppercase
-- `to_lower():str` - converts letters in the string to lowercase
-- `replace(find:str, with:str, limit:int? = null):str` - replaces each appearance of a sequence with another sequence up to limit times
-- `insert(sequence:str, position:int):str` - inserts the sequence at the position
-- `split(separator:str):table` - separates the string into a table of strings
-- `split():table` - separates the string by whitespace into a table of strings
-- `remove_range(between:range):str` - removes characters within the range
-- `+(other:box):str` - concatenates the string and other.stringify
-- `*(count:int):str` - repeats the string count times
-- `==(other:box):bool` - returns true if other is an equal string
-- `<(other:box):bool` - returns true if other is a string preceding alphabetically
-- `<=(other:box):bool` - returns true if other is a string equal or preceding alphabetically
-- `>=(other:box):bool` - returns true if other is a string succeeding alphabetically
-- `>(other:box):bool` - returns true if other is a string equal or succeeding alphabetically
+- `stringify():Str` - returns self
+- `count():Int` - returns the number of characters
+- `count(sequence:Str):Int` - returns the number of times the sequence appears
+- `length():Int` - calls `count()`
+- `characters():Table` - gets a table of characters in the string
+- `trim(predicate:Delegate? = null):Str` - removes characters matching a predicate from the start and end of the string (defaults to whitespace)
+- `trim_start(predicate:Delegate? = null):Str` - removes characters matching a predicate from the start of the string (defaults to whitespace)
+- `trim_start(sequence:Str):Str` - removes the sequence from the start of the string
+- `trim_end(predicate:Delegate? = null):Str` - removes characters matching a predicate from the end of the string (defaults to whitespace)
+- `trim_end(sequence:Str):Str` - removes the sequence from the end of the string
+- `to_case(case:StringCaseType):Str` - converts the string to PascalCase, lowerCamelCase, snake_case, kebab-case, flatcase, Title Case, Sentence case
+- `to_upper():Str` - converts letters in the string to uppercase
+- `to_lower():Str` - converts letters in the string to lowercase
+- `replace(find:Str, with:Str, limit:Int? = null):Str` - replaces each appearance of a sequence with another sequence up to limit times
+- `insert(sequence:Str, position:Int):Str` - inserts the sequence at the position
+- `split(separator:Str):Table` - separates the string into a table of strings
+- `split():Table` - separates the string by whitespace into a table of strings
+- `remove_range(between:Range):Str` - removes characters within the range
+- `+(other:Box):Str` - concatenates the string and other.stringify
+- `*(count:Int):Str` - repeats the string count times
+- `==(other:Box):Bool` - returns true if other is an equal string
+- `<(other:Box):Bool` - returns true if other is a string preceding alphabetically
+- `<=(other:Box):Bool` - returns true if other is a string equal or preceding alphabetically
+- `>=(other:Box):Bool` - returns true if other is a string succeeding alphabetically
+- `>(other:Box):Bool` - returns true if other is a string equal or succeeding alphabetically
 
-#### [abstract] number (num)
+#### [abstract] Number (Num)
 
 The base component for integers and decimals.
-- `stringify():str` - returns "number"
-- `to_dec():dec` - converts the number to a decimal
-- `convert_angle(from:angle_type, to:angle_type):num` - converts the angle between different types (degrees, radians, gradians, turns)
-- `sqrt():num` - returns the square root of the number
-- `cbrt():num` - returns the cube root of the number
-- `lerp(to:num, weight:num):dec` - linearly interpolates the number
-- `abs():num` - returns the positive value of the number
-- `clamp(min, max):num` - returns min if < min, max if > max, otherwise self
-- `floor():int` - returns the highest integer below the number
-- `ceil():int` - returns the lowest integer above the number
-- `truncate():int` - removes the decimal places of the number
+- `stringify():Str` - returns "number"
+- `to_dec():Dec` - converts the number to a decimal
+- `convert_angle(from:AngleType, to:AngleType):Num` - converts the angle between different types (degrees, radians, gradians, turns)
+- `sqrt():Num` - returns the square root of the number
+- `cbrt():Num` - returns the cube root of the number
+- `lerp(to:Num, weight:Num):Dec` - linearly interpolates the number
+- `abs():Num` - returns the positive value of the number
+- `clamp(min:Num, max:Num):Num` - returns min if < min, max if > max, otherwise self
+- `floor():Int` - returns the highest integer below the number
+- `ceil():Int` - returns the lowest integer above the number
+- `truncate():Int` - removes the decimal places of the number
 
-#### integer (int)
+#### Integer (Int)
 
 A signed whole number with arbitrary size and precision.
-- `stringify():str` - returns the integer as a string
-- `parse(str1:str):int` - converts the string to an integer or throws
-- `parse_or_null(str1:str?):int?` - converts the string to an integer or returns null
+- `stringify():Str` - returns the integer as a string
+- `parse(str:Str):Int` - converts the string to an integer or throws
+- `parse_or_null(str:Str?):Int?` - converts the string to an integer or returns null
+- `Infinity():Int` - returns infinity
+- `NaN():Int` - returns not-a-number
 
-#### decimal (dec)
+#### Decimal (Dec)
 
 A signed fractional number with arbitrary size and precision.
-- `stringify():str` - returns the decimal as a string
-- `parse(str1:str):dec` - converts the string to a decimal or throws
-- `parse_or_null(str1:str?):dec?` - converts the string to a decimal or returns null
+- `stringify():Str` - returns the decimal as a string
+- `parse(str:Str):Dec` - converts the string to a decimal or throws
+- `parse_or_null(str:Str?):Dec?` - converts the string to a decimal or returns null
+- `Infinity():Dec` - returns infinity
+- `NaN():Dec` - returns not-a-number
 
-#### iterator
+#### Iterator
 
 Gets each item in a sequence.
-- `stringify():str` - returns "iterator"
-- `current():table` - returns the current items in the sequence
-- `move_next():bool` - tries to increment the sequence position
+- `stringify():Str` - returns "iterator"
+- `current():Entry` - returns the current item in the sequence
+- `move_next():Bool` - tries to increment the sequence position
 
-#### sequence
-
-An iterable, deferred sequence of items.
-- `stringify():str` - returns "sequence"
-- `each():iterator` - returns an iterator for each item
-- `to_table():table` - adds each item to a new table
-- `append(item:box):sequence` - adds an item to the end of the sequence
-- `append_each(items:sequence):sequence` - adds each item to the end of the sequence
-- `prepend(item:box):sequence` - adds an item to the start of the sequence
-- `prepend_each(items:sequence):sequence` - adds each item to the start of the sequence
-- `all(predicate:method):bool` - returns true if all items match the predicate
-- `any(predicate:method):bool` - returns true if any item matches the predicate
-- `any():bool` - returns true if the sequence has at least one item
-- `count():int` - returns the number of items
-- `count(item:box):int` - returns the number of times the item appears
-- `length():int` - calls `count()`
-- `contains(item:box):bool` - returns true if sequence contains item
-- `concat(separator:str = "", stringify:method? = null):str` - adds each item to a string by calling stringify
-- `remove(item:box, limit:int? = null):sequence` - removes each appearance of the item up to limit times
-- `remove_where(predicate:method, limit:int? = null):sequence` - removes items matching a predicate up to limit times
-- `remove_first(count:int = 1)` - removes the first count items
-- `remove_last(count:int = 1)` - removes the last count items
-- `remove_duplicates():sequence` - removes duplicate items
-- `clear():sequence` - removes all items
-- `first(predicate:method):box` - returns the first item matching the predicate or throws
-- `first_or_null(predicate:method):box?` - returns the first item matching the predicate or null
-- `first():box` - returns the first item or throws
-- `first_or_null():box` - returns the first item or null
-- `last(predicate:method):box` - returns the last item matching the predicate or throws
-- `last_or_null(predicate:method):box?` - returns the last item matching the predicate or null
-- `last():box` - returns the last item or throws
-- `last_or_null():box` - returns the last item or null
-- `max(value:method? = null):num` - gets the biggest value in the sequence of numbers
-- `min(value:method? = null):num` - gets the smallest value in the sequence of numbers
-- `average(type:average_type = average_type.mean):num` - returns the average value of the sequence of numbers using mean, median, mode, or range
-- `sum():num` - adds all items in the sequence of numbers
-- `product():num` - multiplies all items in the sequence of numbers
-- `sort(comparer:method? = null):sequence` - sorts the sequence into an order using the comparer
-- `reverse():sequence` - reverses the order of the sequence
-- `copy():sequence` - shallow-copies the sequence into another sequence
-
-#### table (includes sequence)
-
-An sequence of key-value pairs.
-- `stringify():str` - returns a string like "[a = b, c = d]"
-- `each():iterator` - returns an iterator for each (key, value)
-- `add(value:box):table` - adds a value at the key one above the highest ordinal key
-- `add_each(values:table):table` - adds each value at the keys one above the highest ordinal key
-- `set(entry1:entry):table` - adds an entry to the table
-- `set(key:box, value:box):table` - creates and adds an entry to the table
-- `get(key:box):box` - finds a value from the key or throws
-- `get_or_null(key:box?):box?` - finds a value from the key or returns null
-- `keys():table` - returns a table of keys
-- `values():table` - returns a table of values
-- `contains_key(key:box?):bool` - returns true if there's an entry with the given key
-- `contains_value(value:box?):bool` - returns true if there's an entry with the given value
-- `sample():entry` - returns a random entry
-- `shuffle():entry` - randomises the keys
-- `invert():table` - swaps the keys and values
-- `weak():bool` - returns true if the values are weakly referenced
-- `set_weak(value:bool):null` - references values weakly so they can be garbage collected
-- `on_set():event` - returns an event that's invoked when a value is set
-- `on_get():event` - returns an event that's invoked when a value is gotten
-
-#### entry
+#### Entry
 
 A key-value pair.
-- `stringify():str` - returns (key + " = " + value)
-- `key():box` - returns the key
-- `set_key(key:box):null` - sets the key
-- `value():box` - returns the value
-- `set_value(value:box):null` - sets the value
+- `stringify():Str` - returns (key + " = " + value)
+- `key():Box` - returns the key
+- `set_key(key:Box):null` - sets the key
+- `value():Box` - returns the value
+- `set_value(value:Box):null` - sets the value
 
-#### range (includes sequence)
+#### Sequence
+
+An iterable, deferred sequence of key-value pairs.
+Methods such as `append` also have a matching `with_append` which returns a new sequence.
+- `stringify():Str` - returns "sequence"
+- `each():Iterator` - returns an iterator for each item
+- `to_table():Table` - adds each item to a new table
+- `all(predicate:Delegate):Bool` - returns true if all items match the predicate
+- `any(predicate:Delegate):Bool` - returns true if any item matches the predicate
+- `any():Bool` - returns true if the sequence has at least one item
+- `count():Int` - returns the number of items
+- `count(item:Box):Int` - returns the number of times the item appears
+- `length():Int` - calls `count()`
+- `contains(item:Box):Bool` - returns true if sequence contains item
+- `first(predicate:Delegate):Box` - returns the first item matching the predicate or throws
+- `first_or_null(predicate:Delegate):Box?` - returns the first item matching the predicate or null
+- `first():Box` - returns the first item or throws
+- `first_or_null():Box` - returns the first item or null
+- `last(predicate:Delegate):Box` - returns the last item matching the predicate or throws
+- `last_or_null(predicate:Delegate):Box?` - returns the last item matching the predicate or null
+- `last():Box` - returns the last item or throws
+- `last_or_null():Box` - returns the last item or null
+- `max(get_value:Delegate? = null):Num` - gets the biggest value in the sequence of numbers
+- `min(get_value:Delegate? = null):Num` - gets the smallest value in the sequence of numbers
+- `average(type:AverageType = AverageType.mean):Num` - returns the average value of the sequence of numbers using mean, median, mode, or range
+- `sum():Num` - adds all items in the sequence of numbers
+- `product():Num` - multiplies all items in the sequence of numbers
+- `append(item:Box):null` - adds an item to the end
+- `append_each(items:Sequence):null` - adds each item to the end
+- `prepend(item:Box):Sequence` - adds an item to the start
+- `prepend_each(items:Sequence):null` - adds each item to the start
+- `concat(separator:str = "", stringify:Delegate? = null):str` - adds each item to a string by calling stringify
+- `remove(item:Box, limit:Int? = null):null` - removes each appearance of the item up to limit times
+- `remove_where(predicate:Delegate, limit:Int? = null):null` - removes items matching a predicate up to limit times
+- `remove_first(count:Int = 1)` - removes the first count items
+- `remove_last(count:Int = 1)` - removes the last count items
+- `remove_duplicates():null` - removes duplicate items
+- `clear():null` - removes all items
+- `sort(comparer:Delegate? = null):null` - sorts the sequence into an order using the comparer
+- `reverse():null` - reverses the order of the sequence
+- `copy():Sequence` - shallow-copies the sequence into another sequence
+
+#### Table (includes Sequence)
+
+A sequence of key-value pairs.
+- `stringify():Str` - returns a string like "[a = b, c = d]"
+- `each():Iterator` - returns an iterator for each (key, value)
+- `add(value:Box):null` - adds a value at the key one above the highest ordinal key
+- `add_each(values:Table):null` - adds each value at the keys one above the highest ordinal key
+- `set(entry:Entry):null` - adds an entry
+- `set(key:Box, value:Box):null` - creates and adds an entry
+- `set_each(values:Table):null` - sets each entry
+- `get(key:Box):Box` - finds a value from the key or throws
+- `get_or_null(key:Box?):Box?` - finds a value from the key or returns null
+- `keys():null` - returns a table of keys
+- `values():null` - returns a table of values
+- `contains_key(key:Box?):Bool` - returns true if there's an entry with the given key
+- `contains_value(value:Box?):Bool` - returns true if there's an entry with the given value
+- `sample():Entry` - returns a random entry
+- `shuffle():Entry` - randomises the keys
+- `invert():null` - swaps the keys and values
+- `weak():Bool` - returns true if the values are weakly referenced
+- `set_weak(value:Bool):null` - references values weakly so they can be garbage collected
+- `on_set():Event` - returns an event that's invoked when a value is set
+- `on_get():Event` - returns an event that's invoked when a value is gotten
+
+#### Range (includes Sequence)
 
 A range between two inclusive numbers.
-- `stringify():str` - returns (min + " to " + max + " step " + step)
-- `new(min:num?, max:num?, step:num = 1):range` - returns a new range
+- `stringify():Str` - returns (min + " to " + max + " step " + step)
+- `new(min:Num?, max:Num?, step:Num = 1):Range` - returns a new range
 - `min():min` - returns the minimum value
-- `set_min(value:num?):null` - sets the minimum value
+- `set_min(value:Num?):null` - sets the minimum value
 - `max():max` - returns the maximum value
-- `set_max(value:num?):null` - sets the maximum value
+- `set_max(value:Num?):null` - sets the maximum value
 - `step():step` - returns the step value
-- `set_step(value:num):null` - sets the step value
+- `set_step(value:Num):null` - sets the step value
 
-#### method_box
+#### Delegate
 
 A box containing a method and a target.
-- `stringify():str` - returns (`target.stringify` + "." + `method_name`)
-- `call(..arguments):box?` - calls the best overload on the target
-- `overloads():table` - returns a table of method overloads
-- `target():box` - returns the method target
-- `set_target(target:box):null` - sets the method target
-- `method_name():str` - returns the method name
-- `set_method_name(name:str):null` - sets the method name
+- `stringify():Str` - returns (`target.stringify` + "." + `method_name`)
+- `call(..arguments):Box?` - calls the best overload on the target
+- `overloads():Table` - returns a table of method overloads
+- `target():Box` - returns the method target
+- `set_target(target:Box):null` - sets the method target
+- `method_name():Str` - returns the method name
+- `set_method_name(name:Str):null` - sets the method name
 
-#### variable
+#### Variable
 
 A box containing information about a variable.
-- `stringify():str` - returns (``)
-- `name():str` - returns the variable name
-- `value():box?` - returns the variable value
-- `types():table` - returns the allowed types of the variable
+- `stringify():Str` - returns (``)
+- `name():Str` - returns the variable name
+- `value():Box?` - returns the variable value
+- `types():Table` - returns the allowed types of the variable
 
-#### time
+#### Time
 
 A date and time in the Gregorian calendar.
-- `stringify(format:str):str` - returns the time formatted with the given (.NET) format string
-- `stringify():str` - returns the time formatted like "2024/08/04 15:46 +0000"
-- `new(total_seconds:num)` - returns a new time
-- `new(year:num, month:num, day:num, hour:num, minute:num, second:num, offset:num = 0)` - returns a new time
-- `new(year:num, month:num, day:num, offset:num = 0)` - returns a new time
-- `now(offset:num):time` - returns the current time at the given offset
-- `now():time` - returns the current time at the local system offset
-- `total_seconds():dec` - returns the number of seconds since 0
-- `total_milliseconds():dec` - returns the number of milliseconds since 0
-- `year():int` - returns the year component
-- `set_year(value:num):null` - sets the year component
-- `month():int` - returns the month component
-- `set_month(value:num):null` - sets the month component
-- `day():int` - returns the day component
-- `set_day(value:num):null` - sets the day component
-- `hour():dec` - returns the hour component
-- `set_hour(value:num):null` - sets the hour component
-- `minute():dec` - returns the minute component
-- `set_minute(value:num):null` - sets the minute component
-- `second():dec` - returns the second component
-- `set_second(value:num):null` - sets the second component
-- `offset():dec` - returns the offset component
-- `set_offset(value:num):null` - sets the offset component
-- `parse(time1:str):time` - converts the string to a time or throws
-- `parse_or_null(time1:str?):time?` - converts the string to a time or returns null
+- `stringify(format:Str):Str` - returns the time formatted with the given (.NET) format string
+- `stringify():Str` - returns the time formatted like "2024/08/04 15:46 +0000"
+- `new(total_seconds:Num)` - returns a new time
+- `new(year:Num, month:Num, day:Num, hour:Num, minute:Num, second:Num, offset:Num = 0)` - returns a new time
+- `new(year:Num, month:Num, day:Num, offset:Num = 0)` - returns a new time
+- `now(offset:Num):Time` - returns the current time at the given offset
+- `now():Time` - returns the current time at the local system offset
+- `total_seconds():Dec` - returns the number of seconds since 0
+- `total_milliseconds():Dec` - returns the number of milliseconds since 0
+- `year():Int` - returns the year component
+- `set_year(value:Num):null` - sets the year component
+- `month():Int` - returns the month component
+- `set_month(value:Num):null` - sets the month component
+- `day():Int` - returns the day component
+- `set_day(value:Num):null` - sets the day component
+- `hour():Dec` - returns the hour component
+- `set_hour(value:Num):null` - sets the hour component
+- `minute():Dec` - returns the minute component
+- `set_minute(value:Num):null` - sets the minute component
+- `second():Dec` - returns the second component
+- `set_second(value:Num):null` - sets the second component
+- `offset():Dec` - returns the offset component
+- `set_offset(value:Num):null` - sets the offset component
+- `parse(time:Str):Time` - converts the string to a time or throws
+- `parse_or_null(time:Str?):Time?` - converts the string to a time or returns null
 
-#### span
+#### Span
 
 A period of time.
-- `stringify(format:str):str` - returns the span formatted with the given (.NET) format string
-- `stringify():str` - returns the span formatted like "00:14:23.1294"
-- `new(total_seconds:num)` - returns a new span
-- `new(hours:num, minutes:num, seconds:num)` - returns a new span
-- `total_seconds():dec` - returns the total number of seconds
-- `total_milliseconds():dec` - returns the total number of milliseconds
-- `hour():dec` - returns the hour component
-- `set_hour(value:num):null` - sets the hour component
-- `minute():dec` - returns the minute component
-- `set_minute(value:num):null` - sets the minute component
-- `second():dec` - returns the second component
-- `set_second(value:num):null` - sets the second component
-- `parse(span1:str):span` - converts the string to a span or throws
-- `parse_or_null(span1:str?):span?` - converts the string to a span or returns null
+- `stringify(format:Str):Str` - returns the span formatted with the given (.NET) format string
+- `stringify():Str` - returns the span formatted like "00:14:23.1294"
+- `new(total_seconds:Num)` - returns a new span
+- `new(hours:Num, minutes:Num, seconds:Num)` - returns a new span
+- `total_seconds():Dec` - returns the total number of seconds
+- `total_milliseconds():Dec` - returns the total number of milliseconds
+- `hour():Dec` - returns the hour component
+- `set_hour(value:Num):null` - sets the hour component
+- `minute():Dec` - returns the minute component
+- `set_minute(value:Num):null` - sets the minute component
+- `second():Dec` - returns the second component
+- `set_second(value:Num):null` - sets the second component
+- `parse(span:Str):Span` - converts the string to a span or throws
+- `parse_or_null(span:Str?):Span?` - converts the string to a span or returns null
 
-#### exception
+#### Exception
 
 An error or control code thrown up the call stack.
-- `stringify():str` - returns (`message()` + "\n" + `strack_trace()`)
-- `new(message:box? = null)` - returns an exception instance with the given message
-- `message():box` - returns the exception message
-- `set_message():str` - sets the exception message
-- `stack_trace():table` - returns each line of the call stack (including external lines from C#)
+- `stringify():Str` - returns (`message()` + "\n" + `strack_trace()`)
+- `new(message:Box? = null)` - returns an exception instance with the given message
+- `message():Box` - returns the exception message
+- `set_message():Str` - sets the exception message
+- `stack_trace():Table` - returns each line of the call stack (including external lines from C#)
 
-#### weak_reference (weak_ref)
+#### WeakReference (WeakRef)
 
 Holds a reference to a box without preventing it from being garbage collected.
-- `stringify():str` - returns (`message()` + "\n" + `stack_trace()`)
-- `context():box` - returns the weakly referenced box
-- `set_context(value:box):null` - sets the weakly referenced box
-- `is_alive():bool` - returns true if the weak reference is still valid
+- `stringify():Str` - returns (`message()` + "\n" + `stack_trace()`)
+- `target():Box` - returns the weakly referenced box
+- `set_target(value:Box):null` - sets the weakly referenced box
+- `is_alive():Bool` - returns true if the weak reference is still valid
 
-#### thread
+#### Thread
 
 Runs code in the background collaboratively.
-- `run(method1:method, arguments:table = []):thread` - calls a method in the thread
-- `wait():` - waits for the thread to finish
+- `run(method:Delegate, arguments:Table = []):Thread` - calls a method in the thread
+- `wait():null` - waits for the thread to finish
 
-#### mutex
+#### Mutex
 
 Limits the number of threads that can run at once.
-- `new(limit:int = 1):mutex` - returns a mutex with the given entry limit
-- `run(method1:method, arguments:table = []):thread` - calls a method in the mutex
-- `limit():int` - returns the entry limit
-- `set_limit(limit:int):null` - sets the entry limit
-- `remaining():int` - returns the remaining entries
-- `set_remaining(remaining:int):null` - sets the remaining entries
+- `new(limit:Int = 1):Mutex` - returns a mutex with the given entry limit
+- `run(method:Delegate, arguments:Table = []):Thread` - calls a method in the mutex
+- `limit():Int` - returns the entry limit
+- `set_limit(limit:Int):null` - sets the entry limit
+- `remaining():Int` - returns the remaining entries
+- `set_remaining(remaining:Int):null` - sets the remaining entries
 
-#### canceller
+#### Canceller
 
 Cancels a background task collaboratively.
-- `cancel(delay:num = 0)` - calls `on_cancel()` after the delay
-- `on_cancel():event` - an event to be invoked when cancelled
-- `is_cancelled():bool` - returns true if cancelled
+- `cancel(delay:Num = 0):null` - calls `on_cancel()` after the delay
+- `on_cancel():Event` - an event to be invoked when cancelled
+- `is_cancelled():Bool` - returns true if cancelled
 - `reset():null` - un-cancels the canceller for reuse
-- `combine(other:canceller):canceller` - combines two cancellers into one
+- `combined_with(other:canceller):Canceller` - combines two cancellers into one
 
-#### event
+#### Event
 
 A signal to be awaited and listened to.
-- `invoke(arguments:table = []):null` - calls each listener and waiter
-- `hook(method1:method, limit:int? = null):null` - calls the method when the event is invoked up to limit times
-- `wait():table` - waits for the event to be invoked
+- `invoke(arguments:Table = []):null` - calls each listener and waiter
+- `hook(method:Delegate, limit:Int? = null):null` - calls the method when the event is invoked up to limit times
+- `wait():Table` - waits for the event to be invoked
 
-#### math
+#### Math
 
 A collection of nerdy maths methods.
-- `pi():dec` - returns many digits of pi (3.14...)
-- `tau():dec` - returns many digits of tau (6.28...)
-- `e():dec` - returns many digits of e (2.71...)
-- `lerp(from:num, to:num, weight:num):dec` - calls `from.lerp(to, weight)`
-- `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `exp`, `log`, `log10`, `log2`, `hypot` - who even knows what most of these do
+- `PI():Dec` - returns many digits of π (3.14...)
+- `TAU():Dec` - returns many digits of τ (6.28...)
+- `E():Dec` - returns many digits of e (2.71...)
+- `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `exp`, `log`, `log10`, `log2`, `hypot` - who even cares about these
 
-#### file
+#### File
 
 Access files on the hard drive.
-- `read(path:str):str` - opens and reads text from the file
-- `read_bytes(path:str):table` - opens and reads a table of bytes from the file
-- `write(path:str, value:str):null` - opens and writes text to the file
-- `write_bytes(path:str, value:table):null` - opens and writes a table of bytes to the file
-- `append(path:str, value:str):null` - opens and appends text to the file
-- `append_bytes(path:str, value:table):null` - opens and appends a table of bytes to the file
-- `delete(path:str):bool` - deletes the file
-- `exists(path:str):bool` - returns true if the file exists
-- `combine_path(a:str, b:str):str` - combines two paths into one
-- `absolute_path(relative:str):str` - converts the relative path to an absolute path
-- `relative_path(absolute:str):str` - converts the absolute path to a relative path
-- `file_name(path:str, extension:bool = true):str` - returns the file name from the path (e.g. "C://Documents/neko.jpg" becomes "neko.jpg")
-- `dir_path(path:str):str` - returns the directory path from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents")
-- `extension(path:str):str` - returns the extension from the path (e.g. "C://Documents/neko.jpg" becomes "jpg")
-- `remove_extension(path:str):str` - removes the extension from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents/neko")
+- `read(path:Str):Str` - opens and reads text from the file
+- `read_bytes(path:Str):Table` - opens and reads a table of bytes from the file
+- `read_sequence(path:Str):Sequence` - opens and reads a sequence of bytes from the file
+- `write(path:Str, value:Str):null` - opens and writes text to the file
+- `write_bytes(path:Str, value:Table):null` - opens and writes a table of bytes to the file
+- `write_sequence(path:Str, value:Table):Sequence` - opens and writes a sequence of bytes to the file
+- `append(path:Str, value:Str):null` - opens and appends text to the file
+- `append_bytes(path:Str, value:Table):null` - opens and appends a table of bytes to the file
+- `append_sequence(path:Str, value:Sequence):Str` - opens and appends a sequence of bytes to the file
+- `delete(path:Str):Bool` - deletes the file
+- `exists(path:Str):Bool` - returns true if the file exists
 
-#### random
+#### Folder
+
+Access folders/directories on the hard drive.
+- `file_names(path:Str):Table` - returns a table of file names
+- `file_names_recursive(path:Str):Table` - returns a table of file names, including files in nested folders
+- `folder_names(path:Str):Table` - returns a table of folder names
+- `folder_names_recursive(path:Str):Table` - returns a table of folder names, including folders in nested folders
+- `delete(path:Str):Bool` - deletes the folder
+- `exists(path:Str):Bool` - returns true if the folder exists
+
+#### Path
+
+Handle file paths.
+- `join(a:Str, b:Str):Str` - joins two paths into one
+- `file(path:Str, extension:Bool = true):Str` - returns the file name from the path (e.g. "C://Documents/neko.jpg" becomes "neko.jpg")
+- `folder(path:Str):Str` - returns the folder path from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents")
+- `extension(path:Str):Str` - returns the extension from the path (e.g. "C://Documents/neko.jpg" becomes "jpg")
+- `trim_extension(path:Str):Str` - removes the path without the extension (e.g. "C://Documents/neko.jpg" becomes "C://Documents/neko")
+- `drive(path:Str):Str?` - returns the drive from the path (e.g. "C://Documents/neko.jpg" becomes "C")
+- `to_absolute(relative:Str):Str` - converts the relative path to an absolute path
+- `to_relative(absolute:Str):Str` - converts the absolute path to a relative path
+
+#### Random
 
 Generate pseudo-random numbers.
-- `seed():num` - returns the random seed
-- `set_seed(value:num):null` - sets the random seed
-- `int(min:num, max:num):int` - returns a random integer from min to max
-- `int(max:num):int` - calls `int(1, max)`
-- `int(range1:range):int` - returns a random integer in the range
-- `dec(min:num, max:num):dec` - returns a random decimal from min to max
-- `dec(range1:range):dec` - returns a random decimal in the range
+- `seed():Num` - returns the random seed
+- `set_seed(value:Num):null` - sets the random seed
+- `int(min:Num, max:Num):Int` - returns a random integer from min to max
+- `int(max:Num):Int` - calls `int(1, max)`
+- `int(range:Range):Int` - returns a random integer in the range
+- `dec(min:Num, max:Num):Dec` - returns a random decimal from min to max
+- `dec(range:Range):Dec` - returns a random decimal in the range
 
 ### Versioning Guide
 
@@ -961,5 +986,166 @@ For users:
 
 ### Style Guide
 
-- Avoid redundant words (e.g. `hash_code()` not `get_hash_code()`)
-- Append a number starting from 1 to avoid naming collisions (e.g. `i1` not `i2`/`j`)
+#### Naming
+
+Names should be clear and concise.
+
+Variables should use lower_snake_case:
+```
+var health := 100
+var armor := 50
+```
+
+Constant variables should use PascalCase:
+```
+var Player := {
+  var health := 100
+}
+```
+
+Methods should use lower_snake_case unless they fetch a constant:
+```
+sub heal(amount:int) do
+  health += amount
+end
+```
+```
+sub PI()
+  return 3.14159265
+end
+```
+
+##### Avoid redundant words
+
+Avoid:
+```
+get_hash_code()
+return_username()
+remove_item(item)
+```
+
+Instead:
+```
+hash_code()
+username()
+remove(item)
+```
+
+##### Avoid misleading names for booleans
+
+Avoid:
+```
+var freeze_objects:bool
+var are_objects_frozen:bool
+```
+
+Instead:
+```
+var freeze_objects_on:bool
+var freeze_objects_enabled:bool
+```
+
+##### Avoid misleading names for chain methods
+
+Avoid:
+```
+var numbers := [1, 2].add(3)
+```
+
+Instead:
+```
+var numbers := [1, 2].with_add(3)
+```
+
+##### Naming collisions
+
+Use a number suffix or descriptive name to avoid naming collisions.
+
+Avoid:
+```
+for i in 1 to 5 do
+  for j in 1 to 5 do
+    for k in 1 to 5 do
+```
+
+Instead:
+```
+for i in 1 to 5 do
+  for i2 in 1 to 5 do
+    for i3 in 1 to 5 do
+```
+```
+for x in 1 to 5 do
+  for y in 1 to 5 do
+    for z in 1 to 5 do
+```
+
+Avoid:
+```
+var cat := Cat.new
+var cat1 := Cat.new
+var kitty := Cat.new
+```
+
+Instead:
+```
+var cat := Cat.new
+var cat2 := Cat.new
+var cat3 := Cat.new
+```
+```
+var red_cat := Cat.new
+var green_cat := Cat.new
+var blue_cat := Cat.new
+```
+
+#### Comments
+
+Comments should be clear and concise.
+
+##### Separating sections of code
+
+Insert a comment on its own line before each section:
+```
+# Players
+john.respawn
+mikasa.respawn
+
+# Enemies
+dullahan.respawn
+```
+
+##### Explaining sections of code
+
+Insert a comment on its own line before the section:
+```
+# Respawn player
+player.dead = false
+player.health = 100
+player.teleport(0, 0)
+```
+
+##### Explaining specific lines in sections of code
+
+Put a comment at the end of the line:
+```
+var shield := 50 # Percentage of health
+```
+
+##### Avoid magic numbers
+
+Avoid:
+```
+# Create a 3x3 game grid
+for i in 1 to 3 do
+  log("###")
+end
+```
+
+Instead:
+```
+# Create a game grid
+for i in 1 to 3 do
+  log("###")
+end
+```
