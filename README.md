@@ -37,8 +37,8 @@ log fibonacci(10)
 
 ### Orientation
 
-Holo uses "boxes" which serve as templates and instances.
-Boxes contain methods and variables, which are both public by default.
+Holo uses "objects" which serve as templates and instances.
+Objects contain methods and variables, which are both public by default.
 There are no value types.
 
 ### Statements
@@ -141,9 +141,9 @@ var numbers:Range = 1 to 10
 var odd_numbers:Range = 1 to 10 step 2
 ```
 
-### Boxes
+### Objects
 
-Boxes are objects created with curly brackets.
+Objects are created with curly brackets.
 Rather than inheriting from a base type, they include multiple components.
 
 Both methods and variables are public by default.
@@ -160,7 +160,7 @@ var Cat := {
 }
 ```
 
-To instantiate a box, call the `new` method which clones the box and calls the `init` method.
+To instantiate an object, call the `new` method which clones the object and calls the `init` method.
 ```
 var Cat := {
   var name:Str
@@ -175,7 +175,7 @@ var tama := Cat.new("Tama")
 
 ### Methods
 
-Methods run under a context accessible with `self`.
+Methods run under a target accessible with `self`.
 
 Methods are called by name. Brackets are optional.
 ```
@@ -194,7 +194,7 @@ end
 meow
 ```
 
-Anonymous methods (stored in method boxes) are declared with `sub()`. Brackets are mandatory.
+Anonymous methods (stored in method objects) are declared with `sub()`. Brackets are mandatory.
 ```
 var meow = sub()
   log("nya")
@@ -227,7 +227,7 @@ end
 var one, ..two_three := [1, 2, 3]
 ```
 
-Assignments on a box are translated to method calls (similar to Ruby).
+Assignments on an object are translated to method calls (similar to Ruby).
 ```
 var Cat := {
   sub set_name(name:Str)
@@ -269,7 +269,7 @@ Cat.say(message = "meow")
 
 ### Extension Methods
 
-Extension methods are methods that refer to another box.
+Extension methods are methods that refer to another object.
 When calling a method, extension methods take priority over normal methods.
 ```
 var Extensions := {
@@ -293,7 +293,7 @@ sub increment(value:Num):value
 end
 ```
 
-The `(of ..types)` operator (taken from Visual Basic) can be used on boxes. If not overloaded, the arguments can be retrieved with `generics()` or `generic(index)`.
+The `(of ..types)` operator (taken from Visual Basic) can be used on objects. If not overloaded, the arguments can be retrieved with `generics()` or `generic(index)`.
 ```
 var ToyBox := {
   var contents:generic(1)
@@ -331,7 +331,7 @@ var items:Table(of int, string) := ["red", "blue", "green"]
 
 ### Casts
 
-When a box is assigned to a variable of a different type, it is cast to that type.
+When an object is assigned to a variable of a different type, it is cast to that type.
 ```
 var health:Decimal = 100
 ```
@@ -349,7 +349,7 @@ end
 
 ### Tables
 
-Tables are a type of box that store key-value pairs.
+Tables are a type of object that store key-value pairs.
 If the key is omitted, one-based indexing is used (like Lua).
 They can be created with square brackets.
 ```
@@ -370,7 +370,7 @@ var joined := [..table1, ..table2]
 
 ### Attributes
 
-Each box has a table of attributes for its variables and a table of attributes for its methods.
+Each object has a table of attributes for its variables and a table of attributes for its methods.
 Attributes can be added with square brackets before a method or variable declaration.
 They omit the `_attribute` and `.new` (like C#).
 ```
@@ -384,9 +384,9 @@ method_attributes.get("get_nuclear_launch_codes").get(1)
 
 Core attributes:
 ```
-[private] (variable, method) - warn if accessed outside of box / derived box
-[abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived box
-[static] (variable, method) - warn if accessed from derived box (instances are derived)
+[private] (variable, method) - warn if accessed outside of object / derived object
+[abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived object
+[static] (variable, method) - warn if accessed from derived object (instances are derived)
 [summary(message:string)] (variable, method) - description for intellisense
 [deprecated(message:string? = null)] (variable, method) - warn if used
 ```
@@ -421,9 +421,9 @@ not true
 
 Null is handled with null propagation.
 ```
-box?.value
-box ?? value
-box ??= value
+object?.value
+object ?? value
+object ??= value
 ```
 
 ### Method operators
@@ -543,7 +543,7 @@ Ruby uses strings (symbols) as enums. It suffers from typos and doesn't support 
 
 GDScript uses integers as enums. It suffers from poor debugging readability.
 
-Holo uses enums as a type of box that can be created with `enum` or `Enum.new`. They contain a name:string and a value:number.
+Holo uses enums as a type of object that can be created with `enum` or `Enum.new`. They contain a name:string and a value:number.
 ```
 var entity_type := enum
   player = 1
@@ -598,39 +598,39 @@ label hello
 
 For simplicity, generic types (`(of ...)`) have not been annotated.
 
-#### Box
+#### Object
 
-Every box includes box, even if not in the `components` table.
-- `stringify():Str` - returns "box"
-- `new(..params):self` - creates a new box, adding this box as a component, setting `class` to return this box, and calling `init(params)`
+Every object includes object, even if not in the `components` table.
+- `stringify():Str` - returns "object"
+- `new(..params):self` - creates a new object, adding this object as a component, setting `class` to return this object, and calling `init(params)`
 - `init(..params):null` - default initialise method
-- `class():Box` - returns self
+- `class():Obj` - returns self
 - `generics():Table` - returns the generic types
-- `generic(index:Box):Box` - returns the generic type at the given index or null
-- `components():Table` - returns the boxes included in this box
+- `generic(index:Obj):Obj` - returns the generic type at the given index or null
+- `components():Table` - returns the objects included in this object
 - `variables():Table` - returns a table of [name, variable]
 - `methods():Table` - returns a table of [name, delegate] (includes extension methods)
 - `variable(name:Str):Variable` - returns the variable with the given name
 - `method(name:Str):Delegate` - returns the method with the given name
-- `eval(code:Delegate):Box` - executes the method in the box context
-- `eval(code:Str):Box` - parses and executes the code in the box context
+- `eval(code:Delegate):Obj` - executes the method in the object
+- `eval(code:Str):Obj` - parses and executes the code in the object
 - `hash_code():Int` - returns a lookup number
-- `==(other:Box):Bool` - returns true if both boxes have the same reference
-- `!=(other:Box):Bool` - calls `==` and inverses with `not`
-- `<=>(other:Box):Bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
+- `==(other:Obj):Bool` - returns true if both objects have the same reference
+- `!=(other:Obj):Bool` - calls `==` and inverses with `not`
+- `<=>(other:Obj):Bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
 
 #### Null (null)
 
-A box representing no box.
+An object representing no object.
 - `stringify():Str` - returns "null"
 
 #### Global
 
-A box containing methods that can be called as if they were in `self`.
+An object containing methods that can be called as if they were in `self`.
 - `stringify():Str` - returns "global"
 - `log(..messages):null` - logs each message to the standard output
 - `warn(..messages):null` - logs each warning message to the standard output
-- `throw(message:Box):null` - creates an exception and throws it
+- `throw(message:Obj):null` - creates an exception and throws it
 - `throw(exception:Exception):null` - throws the exception
 - `input():Str` - reads and returns a line of user input
 - `wait(duration:Num = 0.001):Dec` - yields for the duration in seconds and returns the exact amount of time waited
@@ -668,13 +668,13 @@ An immutable sequence of characters.
 - `split(separator:Str):Table` - separates the string into a table of strings
 - `split():Table` - separates the string by whitespace into a table of strings
 - `remove_range(between:Range):Str` - removes characters within the range
-- `+(other:Box):Str` - concatenates the string and other.stringify
+- `+(other:Obj):Str` - concatenates the string and other.stringify
 - `*(count:Int):Str` - repeats the string count times
-- `==(other:Box):Bool` - returns true if other is an equal string
-- `<(other:Box):Bool` - returns true if other is a string preceding alphabetically
-- `<=(other:Box):Bool` - returns true if other is a string equal or preceding alphabetically
-- `>=(other:Box):Bool` - returns true if other is a string succeeding alphabetically
-- `>(other:Box):Bool` - returns true if other is a string equal or succeeding alphabetically
+- `==(other:Obj):Bool` - returns true if other is an equal string
+- `<(other:Obj):Bool` - returns true if other is a string preceding alphabetically
+- `<=(other:Obj):Bool` - returns true if other is a string equal or preceding alphabetically
+- `>=(other:Obj):Bool` - returns true if other is a string succeeding alphabetically
+- `>(other:Obj):Bool` - returns true if other is a string equal or succeeding alphabetically
 
 #### [abstract] Number (Num)
 
@@ -720,10 +720,10 @@ Gets each item in a sequence.
 
 A key-value pair.
 - `stringify():Str` - returns (key + " = " + value)
-- `key():Box` - returns the key
-- `set_key(key:Box):null` - sets the key
-- `value():Box` - returns the value
-- `set_value(value:Box):null` - sets the value
+- `key():Obj` - returns the key
+- `set_key(key:Obj):null` - sets the key
+- `value():Obj` - returns the value
+- `set_value(value:Obj):null` - sets the value
 
 #### Sequence
 
@@ -736,28 +736,28 @@ Methods such as `append` also have a matching `with_append` which returns a new 
 - `any(predicate:Delegate):Bool` - returns true if any item matches the predicate
 - `any():Bool` - returns true if the sequence has at least one item
 - `count():Int` - returns the number of items
-- `count(item:Box):Int` - returns the number of times the item appears
+- `count(item:Obj):Int` - returns the number of times the item appears
 - `length():Int` - calls `count()`
-- `contains(item:Box):Bool` - returns true if sequence contains item
-- `first(predicate:Delegate):Box` - returns the first item matching the predicate or throws
-- `first_or_null(predicate:Delegate):Box?` - returns the first item matching the predicate or null
-- `first():Box` - returns the first item or throws
-- `first_or_null():Box` - returns the first item or null
-- `last(predicate:Delegate):Box` - returns the last item matching the predicate or throws
-- `last_or_null(predicate:Delegate):Box?` - returns the last item matching the predicate or null
-- `last():Box` - returns the last item or throws
-- `last_or_null():Box` - returns the last item or null
+- `contains(item:Obj):Bool` - returns true if sequence contains item
+- `first(predicate:Delegate):Obj` - returns the first item matching the predicate or throws
+- `first_or_null(predicate:Delegate):Obj?` - returns the first item matching the predicate or null
+- `first():Obj` - returns the first item or throws
+- `first_or_null():Obj` - returns the first item or null
+- `last(predicate:Delegate):Obj` - returns the last item matching the predicate or throws
+- `last_or_null(predicate:Delegate):Obj?` - returns the last item matching the predicate or null
+- `last():Obj` - returns the last item or throws
+- `last_or_null():Obj` - returns the last item or null
 - `max(get_value:Delegate? = null):Num` - gets the biggest value in the sequence of numbers
 - `min(get_value:Delegate? = null):Num` - gets the smallest value in the sequence of numbers
 - `average(type:AverageType = AverageType.mean):Num` - returns the average value of the sequence of numbers using mean, median, mode, or range
 - `sum():Num` - adds all items in the sequence of numbers
 - `product():Num` - multiplies all items in the sequence of numbers
-- `append(item:Box):null` - adds an item to the end
+- `append(item:Obj):null` - adds an item to the end
 - `append_each(items:Sequence):null` - adds each item to the end
-- `prepend(item:Box):Sequence` - adds an item to the start
+- `prepend(item:Obj):Sequence` - adds an item to the start
 - `prepend_each(items:Sequence):null` - adds each item to the start
 - `concat(separator:str = "", stringify:Delegate? = null):str` - adds each item to a string by calling stringify
-- `remove(item:Box, limit:Int? = null):null` - removes each appearance of the item up to limit times
+- `remove(item:Obj, limit:Int? = null):null` - removes each appearance of the item up to limit times
 - `remove_where(predicate:Delegate, limit:Int? = null):null` - removes items matching a predicate up to limit times
 - `remove_first(count:Int = 1)` - removes the first count items
 - `remove_last(count:Int = 1)` - removes the last count items
@@ -772,17 +772,17 @@ Methods such as `append` also have a matching `with_append` which returns a new 
 A sequence of key-value pairs.
 - `stringify():Str` - returns a string like "[a = b, c = d]"
 - `each():Iterator` - returns an iterator for each (key, value)
-- `add(value:Box):null` - adds a value at the key one above the highest ordinal key
+- `add(value:Obj):null` - adds a value at the key one above the highest ordinal key
 - `add_each(values:Table):null` - adds each value at the keys one above the highest ordinal key
 - `set(entry:Entry):null` - adds an entry
-- `set(key:Box, value:Box):null` - creates and adds an entry
+- `set(key:Obj, value:Obj):null` - creates and adds an entry
 - `set_each(values:Table):null` - sets each entry
-- `get(key:Box):Box` - finds a value from the key or throws
-- `get_or_null(key:Box?):Box?` - finds a value from the key or returns null
+- `get(key:Obj):Obj` - finds a value from the key or throws
+- `get_or_null(key:Obj?):Obj?` - finds a value from the key or returns null
 - `keys():null` - returns a table of keys
 - `values():null` - returns a table of values
-- `contains_key(key:Box?):Bool` - returns true if there's an entry with the given key
-- `contains_value(value:Box?):Bool` - returns true if there's an entry with the given value
+- `contains_key(key:Obj?):Bool` - returns true if there's an entry with the given key
+- `contains_value(value:Obj?):Bool` - returns true if there's an entry with the given value
 - `sample():Entry` - returns a random entry
 - `shuffle():Entry` - randomises the keys
 - `invert():null` - swaps the keys and values
@@ -805,21 +805,21 @@ A range between two inclusive numbers.
 
 #### Delegate
 
-A box containing a method and a target.
+An object containing a method and a target.
 - `stringify():Str` - returns (`target.stringify` + "." + `method_name`)
-- `call(..arguments):Box?` - calls the best overload on the target
+- `call(..arguments):Obj?` - calls the best overload on the target
 - `overloads():Table` - returns a table of method overloads
-- `target():Box` - returns the method target
-- `set_target(target:Box):null` - sets the method target
+- `target():Obj` - returns the method target
+- `set_target(target:Obj):null` - sets the method target
 - `method_name():Str` - returns the method name
 - `set_method_name(name:Str):null` - sets the method name
 
 #### Variable
 
-A box containing information about a variable.
+An object containing information about a variable.
 - `stringify():Str` - returns (``)
 - `name():Str` - returns the variable name
-- `value():Box?` - returns the variable value
+- `value():Obj?` - returns the variable value
 - `types():Table` - returns the allowed types of the variable
 
 #### Time
@@ -873,17 +873,17 @@ A period of time.
 
 An error or control code thrown up the call stack.
 - `stringify():Str` - returns (`message()` + "\n" + `strack_trace()`)
-- `new(message:Box? = null)` - returns an exception instance with the given message
-- `message():Box` - returns the exception message
+- `new(message:Obj? = null)` - returns an exception instance with the given message
+- `message():Obj` - returns the exception message
 - `set_message():Str` - sets the exception message
 - `stack_trace():Table` - returns each line of the call stack (including external lines from C#)
 
 #### WeakReference (WeakRef)
 
-Holds a reference to a box without preventing it from being garbage collected.
+Holds a reference to an object without preventing it from being garbage collected.
 - `stringify():Str` - returns (`message()` + "\n" + `stack_trace()`)
-- `target():Box` - returns the weakly referenced box
-- `set_target(value:Box):null` - sets the weakly referenced box
+- `target():Obj` - returns the weakly referenced object
+- `set_target(value:Obj):null` - sets the weakly referenced object
 - `is_alive():Bool` - returns true if the weak reference is still valid
 
 #### Thread
