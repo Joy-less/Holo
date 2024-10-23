@@ -1,53 +1,59 @@
-﻿namespace Holo;
+﻿using Holo.CoreLibrary;
+
+namespace Holo;
 
 public static class Processor {
-    public static void Process(Box Context, IEnumerable<Instruction> Instructions) {
-        Stack<Box> Stack = [];
+    public static void Process(HoloObject Target, IEnumerable<Instruction> Instructions) {
+        Stack<HoloObject> Stack = [];
 
         foreach (Instruction Instruction in Instructions) {
             // Self
             if (Instruction is SelfInstruction SelfInstruction) {
-                Stack.Push(Context);
+                Stack.Push(Target);
                 continue;
             }
             // Integer
             if (Instruction is IntegerInstruction IntegerInstruction) {
-                Stack.Push(new Box(IntegerInstruction.Integer));
+                Stack.Push(HoloObject.Convert(IntegerInstruction.Integer));
                 continue;
             }
             // String
             if (Instruction is StringInstruction StringInstruction) {
-                Stack.Push(new Box(StringInstruction.String));
+                Stack.Push(HoloObject.Convert(StringInstruction.String));
                 continue;
             }
             // Call
             if (Instruction is CallInstruction CallInstruction) {
                 // Pop arguments from stack
-                Box[] Arguments = new Box[CallInstruction.ArgumentCount];
+                /*HoloObject[] Arguments = new HoloObject[CallInstruction.ArgumentCount];
                 for (int Index = 0; Index < Arguments.Length; Index++) {
                     Arguments[Index] = Stack.Pop();
+                }*/
+                HoloTable<HoloObject, HoloObject> Arguments = new();
+                for (int Index = 0; Index < CallInstruction.ArgumentCount; Index++) {
+                    Arguments.Set(Index, Stack.Pop());
                 }
 
-                // Pop context from stack
-                Box CallContext = Stack.Pop();
+                // Pop target from stack
+                HoloObject CallTarget = Stack.Pop();
 
                 // Get method by name
-                Method Method = CallContext.GetMethod(CallInstruction.MethodName);
+                Method Method = CallTarget.GetMethodOrNull(CallInstruction.MethodName)!;
 
                 // Call method
-                Method.Call(CallContext, Arguments);
+                Method.Call(CallTarget, Arguments);
                 continue;
             }
             // Assign
             if (Instruction is AssignInstruction AssignInstruction) {
                 // Pop value from stack
-                Box Value = Stack.Pop();
+                HoloObject Value = Stack.Pop();
 
                 // Pop context from stack
-                Box AssignContext = Stack.Pop();
+                HoloObject AssignContext = Stack.Pop();
 
                 // Assign to variable
-                AssignContext.SetProperty(AssignInstruction.VariableName, Value);
+                AssignContext.SetVariable(AssignInstruction.VariableName, Value);
                 continue;
             }
             // Not implemented

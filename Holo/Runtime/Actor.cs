@@ -3,5 +3,5 @@
 public class Actor {
     public object Lock = new();
 
-    public static readonly Actor Main = new();
+    public static readonly Actor Default = new();
 }

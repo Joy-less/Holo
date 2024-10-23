@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Holo.CoreLibrary;
+using System.Reflection;
 
 namespace Holo;
 
@@ -19,5 +20,12 @@ internal static class Extensions {
                 yield return Property.GetMethod;
             }
         }
+    }
+    public static HoloTable<HoloObject, HoloObject> ToTable(this IEnumerable Enumerable) {
+        HoloTable<HoloObject, HoloObject> Table = new();
+        foreach (object? Object in Enumerable) {
+            Table.Add(HoloObject.Convert(Object));
+        }
+        return Table;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Holo;
-using Holo.Native;
+using Holo.CoreLibrary;
 
 const string Code = @"
 log 'Hi!'
@@ -20,4 +20,4 @@ foreach (Instruction Instruction in Compiler.Compile(Parser.Parse(Code))) {
 }
 
 Console.WriteLine("\nProcess:");
-Processor.Process(Box.CreateFrom(new NativeBox()), Compiler.Compile(Parser.Parse(Code)));
+Processor.Process(new HoloObject(), Compiler.Compile(Parser.Parse(Code)));

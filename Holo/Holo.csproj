@@ -1,11 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NoWarn>1701;1702;IDE0130</NoWarn>
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CaseConverter" Version="2.0.1" />
+    <PackageReference Include="ExtendedNumerics.BigDecimal" Version="3000.0.0.280" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="System.Collections" />
+    <Using Include="System.Collections.Frozen" />
+    <Using Include="System.Collections.Immutable" />
   </ItemGroup>
 </Project>
