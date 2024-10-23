@@ -872,7 +872,7 @@ A period of time.
 #### Exception
 
 An error or control code thrown up the call stack.
-- `stringify():Str` - returns (`message()` + "\n" + `strack_trace()`)
+- `stringify():Str` - returns (`message()` + "\n" + `stack_trace()`)
 - `new(message:Obj? = null)` - returns an exception instance with the given message
 - `message():Obj` - returns the exception message
 - `set_message():Str` - sets the exception message
@@ -940,6 +940,8 @@ Access files on the hard drive.
 - `append_sequence(path:Str, value:Sequence):Str` - opens and appends a sequence of bytes to the file
 - `delete(path:Str):Bool` - deletes the file
 - `exists(path:Str):Bool` - returns true if the file exists
+- `copy(from:Str, to:Str):null` - copies the file from the source to the destination
+- `move(from:Str, to:Str):null` - recursively moves the file from the source to the destination
 
 #### Folder
 
@@ -950,6 +952,8 @@ Access folders/directories on the hard drive.
 - `folder_names_recursive(path:Str):Table` - returns a table of folder names, including folders in nested folders
 - `delete(path:Str):Bool` - deletes the folder
 - `exists(path:Str):Bool` - returns true if the folder exists
+- `copy(from:Str, to:Str):null` - recursively copies the folder from the source to the destination
+- `move(from:Str, to:Str):null` - recursively moves the folder from the source to the destination
 
 #### Path
 
