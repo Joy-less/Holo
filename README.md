@@ -428,16 +428,17 @@ These operators are shorthand for method calls.
 0 // 1              # 0.`//`(1)
 0 % 1               # 0.`%`(1)
 0 ^ 1               # 0.`^`(1)
-0 in [1, 2, 3]      # 0.in([1, 2, 3]) -> [1, 2, 3].contains(0)
-0 not_in [1, 2, 3]  # 0.not_in([1, 2, 3]) -> not 0.in([1, 2, 3])
-0 is integer        # 0.is(integer) -> 0.includes(integer)
-0 is_not integer    # 0.is_not(integer) -> not 0.is(integer)
+0 in [1, 2, 3]      # 0.in([1, 2, 3])      -> [1, 2, 3].contains(0)
+0 not_in [1, 2, 3]  # 0.not_in([1, 2, 3])  -> not 0.in([1, 2, 3])
+0 is integer        # 0.is(integer)        -> 0.includes(integer)
+0 is_not integer    # 0.is_not(integer)    -> not 0.is(integer)
+0 as integer        # 0.as(integer)        -> 0.cast(integer)
 true and false      # true.and(false)
 true or false       # true.or(false)
 true xor false      # true.xor(false)
 not true            # true.not()
-object?.value       # object.`?.`(value) -> if object == null do return null else return object.value end
-object ?? value     # object.`??`(value) -> if object == null do return value else return object end
+object?.value       # object.`?.`(value)   -> if object == null do return null else return object.value end
+object ?? value     # object.`??`(value)   -> if object == null do return value else return object end
 ```
 
 These assignment operators are shorthand for applying method operators to the current value.
