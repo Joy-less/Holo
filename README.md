@@ -413,17 +413,12 @@ block comment
 
 Logic operators compare boolean values.
 ```
-true and false
-true or false
-true xor false
-not true
+
 ```
 
 Null is handled with null propagation.
 ```
-object?.value
-object ?? value
-object ??= value
+
 ```
 
 ### Method operators
@@ -436,17 +431,25 @@ These operators are shorthand for method calls.
 0 < 1               # 0.`<`(1)
 0 >= 1              # 0.`>=`(1)
 0 <= 1              # 0.`<=`(1)
+-1                  # 1.`-`()
++1                  # 1.`+`()
 0 + 1               # 0.`+`(1)
 0 - 1               # 0.`-`(1)
 0 * 1               # 0.`*`(1)
 0 / 1               # 0.`/`(1)
-0 // 1              # 0.`/`(1).truncate()
+0 // 1              # 0.`//`(1)
 0 % 1               # 0.`%`(1)
 0 ^ 1               # 0.`^`(1)
-0 in [1, 2, 3]      # [1, 2, 3].contains(0)
-0 not_in [1, 2, 3]  # not [1, 2, 3].contains(0)
-0 is integer        # 0.includes(integer)
-0 is_not integer    # not 0.includes(integer)
+0 in [1, 2, 3]      # 0.in([1, 2, 3]) -> [1, 2, 3].contains(0)
+0 not_in [1, 2, 3]  # 0.not_in([1, 2, 3]) -> not 0.in([1, 2, 3])
+0 is integer        # 0.is(integer) -> 0.includes(integer)
+0 is_not integer    # 0.is_not(integer) -> not 0.is(integer)
+true and false      # true.and(false)
+true or false       # true.or(false)
+true xor false      # true.xor(false)
+not true            # true.not()
+object?.value       # object.`?.`(value) -> if object == null do return null else object.value end
+object ?? value     # object.`??`(value) -> if object == null do return value else return object end
 ```
 
 These assignment operators are shorthand for applying method operators to the current value.
@@ -457,6 +460,7 @@ name *= value
 name /= value
 name %= value
 name ^= value
+name ??= value
 ```
 
 ### Iteration
@@ -602,6 +606,7 @@ For simplicity, generic types (`(of ...)`) have not been annotated.
 
 Every object includes object, even if not in the `components` table.
 - `stringify():Str` - returns "object"
+- `boolify():Str` - returns true if not (false or null)
 - `new(..params):self` - creates a new object, adding this object as a component, setting `class` to return this object, and calling `init(params)`
 - `init(..params):null` - default initialise method
 - `class():Obj` - returns self
