@@ -590,9 +590,9 @@ label hello
 
 To avoid allocating an object every time some code is run, in many languages you'll have to create a constant.
 ```
-var hello:Symbol = "hello"
+var Hello:Symbol = "hello"
 
-log hello
+log Hello
 ```
 
 In Holo, you can use `lit` to inline this constant.
