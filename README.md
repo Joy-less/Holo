@@ -586,6 +586,30 @@ goto hello
 label hello
 ```
 
+### Custom Literals
+
+To avoid allocating an object every time some code is run, in many languages you'll have to create a constant.
+```
+var hello:Symbol = "hello"
+
+log hello
+```
+
+In Holo, you can use `lit` to inline this constant.
+The value will be cached the first time the expression is called, avoiding repeated allocations.
+```
+log lit("hello")
+```
+
+Note that if the literal is cast, the cast literal will be stored.
+```
+sub log_symbol(sym:Symbol)
+  log sym
+end
+
+log_symbol(lit("hello")) # stores "hello" cast to a symbol
+```
+
 ### Standard Library
 
 For simplicity, generic types (`(of ...)`) have not been annotated.
