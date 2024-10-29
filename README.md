@@ -409,18 +409,6 @@ block comment
 #####
 ```
 
-### Fixed operators
-
-Logic operators compare boolean values.
-```
-
-```
-
-Null is handled with null propagation.
-```
-
-```
-
 ### Method operators
 
 These operators are shorthand for method calls.
