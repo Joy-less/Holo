@@ -436,7 +436,7 @@ true and false      # true.and(false)
 true or false       # true.or(false)
 true xor false      # true.xor(false)
 not true            # true.not()
-object?.value       # object.`?.`(value) -> if object == null do return null else object.value end
+object?.value       # object.`?.`(value) -> if object == null do return null else return object.value end
 object ?? value     # object.`??`(value) -> if object == null do return value else return object end
 ```
 
