@@ -252,10 +252,12 @@ Cat.length = 5
 ```
 
 If a method is redefined, the original method can be called with the `origin` method.
+The `origin` method is only available if the method declares the `override` attribute.
 ```
 sub say(message)
   log(message)
 end
+[override]
 sub say(message)
   log("I was here")
   origin
@@ -387,6 +389,7 @@ Core attributes:
 [private] (variable, method) - warn if accessed outside of object / derived object
 [abstract] (variable, method) - if variable, warn if `new` called; if method, warn if called and warn if not overridden in derived object
 [static] (variable, method) - warn if accessed from derived object (instances are derived)
+[override] (variable, method) - gives access to `origin` method if on method
 [summary(message:string)] (variable, method) - description for intellisense
 [deprecated(message:string? = null)] (variable, method) - warn if used
 ```
