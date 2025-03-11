@@ -570,7 +570,7 @@ end
 log(entity_type.get("player").name) # "player"
 log(entity_type.get("animal").value) # 2
 
-log(entity_type.animal.name) # calls missing method; works same as entity_type.get("animal").name
+log(entity_type.animal.name) # calls `missing` method; works same as entity_type.get("animal").name
 ```
 
 ### Events
@@ -954,6 +954,8 @@ Cancels a background task collaboratively.
 A signal to be awaited and listened to.
 - `invoke(arguments:Table = []):null` - calls each listener and waiter
 - `hook(method:Delegate, limit:Int? = null):null` - calls the method when the event is invoked up to limit times
+- `unhook(method:Delegate):Bool` - removes the method from being called when the event is invoked
+- `hooks():Table` - returns the hooked methods
 - `wait():Table` - waits for the event to be invoked
 
 #### Math
@@ -999,11 +1001,13 @@ Handle file paths.
 - `join(a:Str, b:Str):Str` - joins two paths into one
 - `file(path:Str, extension:Bool = true):Str` - returns the file name from the path (e.g. "C://Documents/neko.jpg" becomes "neko.jpg")
 - `folder(path:Str):Str` - returns the folder path from the path (e.g. "C://Documents/neko.jpg" becomes "C://Documents")
-- `extension(path:Str):Str` - returns the extension from the path (e.g. "C://Documents/neko.jpg" becomes "jpg")
-- `trim_extension(path:Str):Str` - removes the path without the extension (e.g. "C://Documents/neko.jpg" becomes "C://Documents/neko")
+- `extension(path:Str):Str?` - returns the extension from the path (e.g. "C://Documents/neko.jpg" becomes "jpg")
+- `trim_extension(path:Str):Str` - returns the path without the extension (e.g. "C://Documents/neko.jpg" becomes "C://Documents/neko")
 - `drive(path:Str):Str?` - returns the drive from the path (e.g. "C://Documents/neko.jpg" becomes "C")
-- `to_absolute(relative:Str):Str` - converts the relative path to an absolute path
-- `to_relative(absolute:Str):Str` - converts the absolute path to a relative path
+- `trim_drive(path:Str):Str` - returns the path without the drive (e.g. "C://Documents/neko.jpg" becomes "Documents/neko")
+- `to_absolute(relative:Str):Str` - converts the relative path to an absolute path according to the current folder
+- `to_relative(absolute:Str):Str` - converts the absolute path to a relative path according to the current folder
+- `simplify(path:Str):Str` - simplifies "." and ".." from the path
 
 #### Random
 
@@ -1089,7 +1093,7 @@ var freeze_objects_on:bool
 var freeze_objects_enabled:bool
 ```
 
-##### Avoid misleading names for chain methods
+##### Avoid misleading names for methods returning a new changed instance
 
 Avoid:
 ```
@@ -1176,7 +1180,7 @@ Put a comment at the end of the line:
 var shield := 50 # Percentage of health
 ```
 
-##### Avoid magic numbers
+##### Avoid magic numbers that could change
 
 Avoid:
 ```
