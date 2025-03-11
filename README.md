@@ -637,7 +637,7 @@ log_symbol(lit("hello")) # stores "hello" cast to a symbol
 
 ### Standard Library
 
-#### Object
+#### Object/Obj
 
 Every object includes object, even if not in the `components` table.
 - `stringify():Str` - returns "object"
@@ -657,7 +657,7 @@ Every object includes object, even if not in the `components` table.
 - `!=(other:Obj):Bool` - calls `==` and inverses with `not`
 - `<=>(other:Obj):Bool` - calls comparison operators (may be redundant, only implement if useful for table lookups)
 
-#### Null (null)
+#### Null/null
 
 An object representing no object.
 - `stringify():Str` - returns "null"
@@ -680,12 +680,12 @@ An object containing methods that can be called as if they were in `self`.
 - `holo_version():Str` - returns the Holo language version
 - `holo_copyright():Str` - returns the Holo language copyrights
 
-#### Boolean (Bool)
+#### Boolean/Bool
 
 Has two instances: `true` and `false`.
 - `stringify():Str` - returns "true" if equals `true`, otherwise "false"
 
-#### String (Str) (includes Sequence)
+#### String/Str (includes Sequence)
 
 An immutable sequence of characters.
 - `stringify():Str` - returns self
@@ -714,7 +714,7 @@ An immutable sequence of characters.
 - `>=(other:Obj):Bool` - returns true if other is a string succeeding alphabetically
 - `>(other:Obj):Bool` - returns true if other is a string equal or succeeding alphabetically
 
-#### [abstract] Number (Num)
+#### [abstract] Number/Num
 
 The base component for integers and reals.
 - `stringify():Str` - returns "number"
@@ -728,24 +728,44 @@ The base component for integers and reals.
 - `floor():Int` - returns the highest integer below the number
 - `ceil():Int` - returns the lowest integer above the number
 - `truncate():Int` - removes the decimal places of the number
+- `min(..numbers:Table):Num` - returns the minimum number in the table
+- `max(..numbers:Table):Num` - returns the maximum number in the table
 
-#### Integer (Int)
+#### [abstract] MinMaxNumber/MinMaxNum
 
-A signed whole number with arbitrary size and precision.
+The base components for integers and reals with a fixed range.
+- `min():Int` - returns the minimum allowed value
+- `max():Int` - returns the maximum allowed value
+
+#### Integer/Int (includes Number)
+
+A signed whole number with arbitrary range.
 - `stringify():Str` - returns the integer as a string
 - `parse(str:Str):Int` - converts the string to an integer or throws
 - `parse_or_null(str:Str?):Int?` - converts the string to an integer or returns null
 - `Infinity():Int` - returns infinity
 - `NaN():Int` - returns not-a-number
 
-#### Real
+#### Integer64/Int64 (includes Integer)
 
-A signed fractional number with arbitrary size and precision.
+A signed whole number with 64 bits (8 bytes).
+- `parse(str:Str):Int` - converts the string to a 64-bit integer or throws
+- `parse_or_null(str:Str?):Int?` - converts the string to a 64-bit integer or returns null
+
+#### Real (includes Number)
+
+A signed fractional number with arbitrary range and precision.
 - `stringify():Str` - returns the real as a string
 - `parse(str:Str):Real` - converts the string to a real or throws
 - `parse_or_null(str:Str?):Real?` - converts the string to a real or returns null
 - `Infinity():Real` - returns positive infinity
 - `NaN():Real` - returns not-a-number
+
+#### Real64/Real64 (includes Real)
+
+A signed fractional number with 64 bits (8 bytes).
+- `parse(str:Str):Int` - converts the string to a 64-bit real or throws
+- `parse_or_null(str:Str?):Int?` - converts the string to a 64-bit real or returns null
 
 #### Iterator
 
