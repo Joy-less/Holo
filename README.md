@@ -816,12 +816,12 @@ Methods such as `append` also have a matching `with_append` which returns a new 
 A sequence of key-value pairs.
 - `stringify():Str` - returns a string like "[a = b, c = d]"
 - `each():Iterator` - returns an iterator for each (key, value)
-- `add(value:Obj):null` - adds a value at the key one above the highest ordinal key
+- `add(value:Obj?):null` - adds a value at the key one above the highest ordinal key
 - `add_each(values:Table):null` - adds each value at the keys one above the highest ordinal key
 - `set(entry:Entry):null` - adds an entry
-- `set(key:Obj, value:Obj):null` - creates and adds an entry
+- `set(key:Obj?, value:Obj?):null` - creates and adds an entry
 - `set_each(values:Table):null` - sets each entry
-- `get(key:Obj):Obj` - finds a value from the key or throws
+- `get(key:Obj?):Obj` - finds a value from the key or throws
 - `try_get(key:Obj?):Result(Obj)` - finds a value from the key or returns an error
 - `keys():null` - returns a table of keys
 - `values():null` - returns a table of values
@@ -833,7 +833,9 @@ A sequence of key-value pairs.
 - `weak():Bool` - returns true if the values are weakly referenced
 - `set_weak(value:Bool):null` - references values weakly so they can be garbage collected
 - `on_set():Event` - returns an event that's invoked when a value is set
-- `on_get():Event` - returns an event that's invoked when a value is gotten
+- `on_set(method:Delegate, limit:Int? = null)` - calls the method when a value is set up to limit times
+- `on_get():Event` - returns an event that's invoked when a value is got
+- `on_get(method:Delegate, limit:Int? = null)` - calls the method when a value is got up to limit times
 
 #### Range (includes Sequence)
 
