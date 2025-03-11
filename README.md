@@ -730,12 +730,10 @@ The base component for integers and reals.
 - `truncate():Int` - removes the decimal places of the number
 - `min(..numbers:Table):Num` - returns the minimum number in the table
 - `max(..numbers:Table):Num` - returns the maximum number in the table
-
-#### [abstract] MinMaxNumber/MinMaxNum
-
-The base components for integers and reals with a fixed range.
-- `min():Int` - returns the minimum allowed value
-- `max():Int` - returns the maximum allowed value
+- `min():Num?` - returns the minimum allowed value
+- `set_min(min:Num):Num?` - sets the minimum allowed value
+- `max():Num?` - returns the maximum allowed value
+- `set_max(min:Num):Num?` - sets the maximum allowed value
 
 #### Integer/Int (includes Number)
 
@@ -746,12 +744,6 @@ A signed whole number with arbitrary range.
 - `Infinity():Int` - returns infinity
 - `NaN():Int` - returns not-a-number
 
-#### Integer64/Int64 (includes Integer)
-
-A signed whole number with 64 bits (8 bytes).
-- `parse(str:Str):Int` - converts the string to a 64-bit integer or throws
-- `parse_or_null(str:Str?):Int?` - converts the string to a 64-bit integer or returns null
-
 #### Real (includes Number)
 
 A signed fractional number with arbitrary range and precision.
@@ -760,12 +752,6 @@ A signed fractional number with arbitrary range and precision.
 - `parse_or_null(str:Str?):Real?` - converts the string to a real or returns null
 - `Infinity():Real` - returns positive infinity
 - `NaN():Real` - returns not-a-number
-
-#### Real64/Real64 (includes Real)
-
-A signed fractional number with 64 bits (8 bytes).
-- `parse(str:Str):Int` - converts the string to a 64-bit real or throws
-- `parse_or_null(str:Str?):Int?` - converts the string to a 64-bit real or returns null
 
 #### Iterator
 
