@@ -449,7 +449,7 @@ These operators are shorthand for method calls.
 0 / 1               # 0.`/`(1)
 0 // 1              # 0.`//`(1)
 0 % 1               # 0.`%`(1)
-0 ^ 1               # 0.`^`(1)
+0 ** 1               # 0.`**`(1)
 
 true and false      # true.and(false)
 true or false       # true.or(false)
