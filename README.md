@@ -92,10 +92,12 @@ end
 
 ### Numbers
 
-Holo has two number types: integers and decimals. Both are signed and arbitrarily large and precise (like Ruby).
+Holo has two number types: integers and reals.
+Both have an arbitrary range and precision (like Ruby).
+Reals are stored as a fraction (integer / integer).
 ```
 var int := 3
-var dec := 6.2
+var real := 6.2
 ```
 
 ### Strings
@@ -335,14 +337,14 @@ var items:Table(of int, string) := ["red", "blue", "green"]
 
 When an object is assigned to a variable of a different type, it is cast to that type.
 ```
-var health:Decimal = 100
+var health:Real = 100
 ```
 
 It does this by calling the `cast(to_type)` method.
 ```
 sub cast(to_type)
-  if to_type is decimal
-    return to_dec()
+  if to_type is Real
+    return to_real()
   else
     return origin(to_type)
   end
@@ -656,7 +658,7 @@ An object containing methods that can be called as if they were in `self`.
 - `throw(message:Obj):null` - creates an exception and throws it
 - `throw(exception:Exception):null` - throws the exception
 - `input():Str` - reads and returns a line of user input
-- `wait(duration:Num = 0.001):Dec` - yields for the duration in seconds and returns the exact amount of time waited
+- `wait(duration:Num = 0.001):Real` - yields for the duration in seconds and returns the exact amount of time waited
 - `local_variables():Table` - returns a table of [name, variable]
 - `rand(range1:Range):Num` - calls `random.rand` and returns a random number in the range
 - `rand(max:Num):max` - calls `random.rand` and returns a random number in the range
@@ -701,13 +703,13 @@ An immutable sequence of characters.
 
 #### [abstract] Number (Num)
 
-The base component for integers and decimals.
+The base component for integers and reals.
 - `stringify():Str` - returns "number"
-- `to_dec():Dec` - converts the number to a decimal
+- `to_real():Real` - converts the number to a real
 - `convert_angle(from:AngleType, to:AngleType):Num` - converts the angle between different types (degrees, radians, gradians, turns)
 - `sqrt():Num` - returns the square root of the number
 - `cbrt():Num` - returns the cube root of the number
-- `lerp(to:Num, weight:Num):Dec` - linearly interpolates the number
+- `lerp(to:Num, weight:Num):Real` - linearly interpolates the number
 - `abs():Num` - returns the positive value of the number
 - `clamp(min:Num, max:Num):Num` - returns min if < min, max if > max, otherwise self
 - `floor():Int` - returns the highest integer below the number
@@ -723,14 +725,14 @@ A signed whole number with arbitrary size and precision.
 - `Infinity():Int` - returns infinity
 - `NaN():Int` - returns not-a-number
 
-#### Decimal (Dec)
+#### Real
 
 A signed fractional number with arbitrary size and precision.
-- `stringify():Str` - returns the decimal as a string
-- `parse(str:Str):Dec` - converts the string to a decimal or throws
-- `parse_or_null(str:Str?):Dec?` - converts the string to a decimal or returns null
-- `Infinity():Dec` - returns infinity
-- `NaN():Dec` - returns not-a-number
+- `stringify():Str` - returns the real as a string
+- `parse(str:Str):Real` - converts the string to a real or throws
+- `parse_or_null(str:Str?):Real?` - converts the string to a real or returns null
+- `Infinity():Real` - returns positive infinity
+- `NaN():Real` - returns not-a-number
 
 #### Iterator
 
@@ -855,21 +857,21 @@ A date and time in the Gregorian calendar.
 - `new(year:Num, month:Num, day:Num, offset:Num = 0)` - returns a new time
 - `now(offset:Num):Time` - returns the current time at the given offset
 - `now():Time` - returns the current time at the local system offset
-- `total_seconds():Dec` - returns the number of seconds since 0
-- `total_milliseconds():Dec` - returns the number of milliseconds since 0
+- `total_seconds():Real` - returns the number of seconds since 0
+- `total_milliseconds():Real` - returns the number of milliseconds since 0
 - `year():Int` - returns the year component
 - `set_year(value:Num):null` - sets the year component
 - `month():Int` - returns the month component
 - `set_month(value:Num):null` - sets the month component
 - `day():Int` - returns the day component
 - `set_day(value:Num):null` - sets the day component
-- `hour():Dec` - returns the hour component
+- `hour():Real` - returns the hour component
 - `set_hour(value:Num):null` - sets the hour component
-- `minute():Dec` - returns the minute component
+- `minute():Real` - returns the minute component
 - `set_minute(value:Num):null` - sets the minute component
-- `second():Dec` - returns the second component
+- `second():Real` - returns the second component
 - `set_second(value:Num):null` - sets the second component
-- `offset():Dec` - returns the offset component
+- `offset():Real` - returns the offset component
 - `set_offset(value:Num):null` - sets the offset component
 - `parse(time:Str):Time` - converts the string to a time or throws
 - `parse_or_null(time:Str?):Time?` - converts the string to a time or returns null
@@ -881,13 +883,13 @@ A period of time.
 - `stringify():Str` - returns the span formatted like "00:14:23.1294"
 - `new(total_seconds:Num)` - returns a new span
 - `new(hours:Num, minutes:Num, seconds:Num)` - returns a new span
-- `total_seconds():Dec` - returns the total number of seconds
-- `total_milliseconds():Dec` - returns the total number of milliseconds
-- `hour():Dec` - returns the hour component
+- `total_seconds():Real` - returns the total number of seconds
+- `total_milliseconds():Real` - returns the total number of milliseconds
+- `hour():Real` - returns the hour component
 - `set_hour(value:Num):null` - sets the hour component
-- `minute():Dec` - returns the minute component
+- `minute():Real` - returns the minute component
 - `set_minute(value:Num):null` - sets the minute component
-- `second():Dec` - returns the second component
+- `second():Real` - returns the second component
 - `set_second(value:Num):null` - sets the second component
 - `parse(span:Str):Span` - converts the string to a span or throws
 - `parse_or_null(span:Str?):Span?` - converts the string to a span or returns null
@@ -998,8 +1000,8 @@ Generate pseudo-random numbers.
 - `int(min:Num, max:Num):Int` - returns a random integer from min to max
 - `int(max:Num):Int` - calls `int(1, max)`
 - `int(range:Range):Int` - returns a random integer in the range
-- `dec(min:Num, max:Num):Dec` - returns a random decimal from min to max
-- `dec(range:Range):Dec` - returns a random decimal in the range
+- `real(min:Num, max:Num):Real` - returns a random real from min to max
+- `real(range:Range):Real` - returns a random real in the range
 
 ### Versioning Guide
 
