@@ -151,13 +151,19 @@ var numbers:Range = 1 to 10
 var odd_numbers:Range = 1 to 10 step 2
 ```
 
+### Variables & methods
+
+Methods belong to an object whereas variables belong to an object or a scope.
+Both methods and variables are public by default.
+Methods have higher precedence in dot notation, otherwise variables have higher precedence.
+
+Referencing a method with or without brackets calls the method.
+Referencing a variable with brackets calls the `new` method, or without brackets gets the value.
+
 ### Objects
 
 Objects are created with curly brackets.
-Rather than inheriting from a base type, they include multiple components.
-
-Both methods and variables are public by default.
-Methods have higher priority in dot notation, whereas variables have higher priority when named.
+They can include multiple components.
 
 ```
 var Cat := {
@@ -181,6 +187,7 @@ var Cat := {
 }
 
 var tama := Cat.new("Tama")
+var robbie := Cat("Robbie")
 ```
 
 ### Methods
@@ -206,7 +213,7 @@ meow
 
 Anonymous methods (stored in method objects) are declared with `sub()`. Brackets are mandatory.
 ```
-var meow = sub()
+var meow := sub()
   log("nya")
 end
 meow.call
@@ -279,23 +286,25 @@ Arguments can be passed by name.
 Cat.say(message = "meow")
 ```
 
-### Extension Methods
+### Extensions
 
-Extension methods are methods that refer to another object.
+Extensions are methods and variables that attach to another object.
 When calling a method, extension methods take priority over normal methods.
 ```
 var Extensions := {
   sub Cat.say(message)
     # ...
   end
+  var Cat.loudness = 10
 }
 include Extensions
 Cat.say("nyan")
+log Cat.loudness
 ```
 
 ### Type Annotations
 
-Type annotations are treated as methods, which are called every time they are used.
+Type annotations can be added after a colon (`:`).
 
 This allows you to pass them as variables:
 ```
@@ -305,18 +314,18 @@ sub increment(value:Num):value
 end
 ```
 
-The `(of ..types)` operator (taken from Visual Basic) can be used on objects. If not overloaded, the arguments can be retrieved with `generics()` or `generic(index)`.
+Type annotations are not checked until the variable is assigned:
 ```
 var ToyBox := {
-  var contents:generic(1)
+  var contents_type:Obj
+  var contents:contents_type
 
-  # Example overload
-  sub of(types:Table):null
-    origin(types)
+  sub init(contents_type:Obj):null
+    self.contents_type = contents_type
   end
 }
 
-var toy_box := ToyBox(of int).new()
+var toy_box := ToyBox.new(Int)
 toy_box.contents = "ball" # error
 ```
 
@@ -335,10 +344,10 @@ var fake_cat := Cat.deep_fake # fake_cat:Cat
 
 Examples of typing tables:
 ```
-var items := ["red", "blue", "green"](of int, string)
+var items := ["red", "blue", "green"](Int, Str)
 ```
 ```
-var items:Table(of int, string) := ["red", "blue", "green"]
+var items:Table(Int, Str) = ["red", "blue", "green"]
 ```
 
 ### Casts
@@ -628,8 +637,6 @@ log_symbol(lit("hello")) # stores "hello" cast to a symbol
 
 ### Standard Library
 
-For simplicity, generic types (`(of ...)`) have not been annotated.
-
 #### Object
 
 Every object includes object, even if not in the `components` table.
@@ -638,8 +645,6 @@ Every object includes object, even if not in the `components` table.
 - `new(..params):self` - creates a new object, adding this object as a component, setting `class` to return this object, and calling `init(params)`
 - `init(..params):null` - default initialise method
 - `class():Obj` - returns self
-- `generics():Table` - returns the generic types
-- `generic(index:Obj):Obj` - returns the generic type at the given index or null
 - `components():Table` - returns the objects included in this object
 - `variables():Table` - returns a table of [name, variable]
 - `methods():Table` - returns a table of [name, delegate] (includes extension methods)
