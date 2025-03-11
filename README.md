@@ -1020,6 +1020,8 @@ Generate pseudo-random numbers.
 - `int(range:Range):Int` - returns a random integer in the range
 - `real(min:Num, max:Num):Real` - returns a random real from min to max
 - `real(range:Range):Real` - returns a random real in the range
+- `is_secure():Bool` - returns whether the random instance generates cryptographically secure numbers (false by default)
+- `set_is_secure(value:Bool):null` - sets whether the random instance generates cryptographically secure numbers
 
 #### Result
 
