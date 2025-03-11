@@ -860,16 +860,16 @@ An object containing information about a variable.
 - `value():Obj?` - returns the variable value
 - `types():Table` - returns the allowed types of the variable
 
-#### Time
+#### Moment
 
 A date and time in the Gregorian calendar.
-- `stringify(format:Str):Str` - returns the time formatted with the given (.NET) format string
-- `stringify():Str` - returns the time formatted like "2024/08/04 15:46 +0000"
-- `new(total_seconds:Num)` - returns a new time
-- `new(year:Num, month:Num, day:Num, hour:Num, minute:Num, second:Num, offset:Num = 0)` - returns a new time
-- `new(year:Num, month:Num, day:Num, offset:Num = 0)` - returns a new time
-- `now(offset:Num):Time` - returns the current time at the given offset
-- `now():Time` - returns the current time at the local system offset
+- `stringify(format:Str):Str` - returns the moment formatted with the given (.NET) format string
+- `stringify():Str` - returns the moment formatted like "2024/08/04 15:46 +0000"
+- `new(total_seconds:Num)` - returns a new moment
+- `new(year:Num, month:Num, day:Num, hour:Num, minute:Num, second:Num, offset:Num = 0)` - returns a new moment
+- `new(year:Num, month:Num, day:Num, offset:Num = 0)` - returns a new moment
+- `now(offset:Num):Moment` - returns the current moment at the given offset
+- `now():Moment` - returns the current moment at the local system offset
 - `total_seconds():Real` - returns the number of seconds since 0
 - `total_milliseconds():Real` - returns the number of milliseconds since 0
 - `year():Int` - returns the year component
@@ -886,8 +886,8 @@ A date and time in the Gregorian calendar.
 - `set_second(value:Num):null` - sets the second component
 - `offset():Real` - returns the offset component
 - `set_offset(value:Num):null` - sets the offset component
-- `parse(time:Str):Time` - converts the string to a time or throws
-- `parse_or_null(time:Str?):Time?` - converts the string to a time or returns null
+- `parse(moment:Str):Moment` - converts the string to a moment or throws
+- `parse_or_null(moment:Str?):Moment?` - converts the string to a moment or returns null
 
 #### Span
 
