@@ -549,7 +549,7 @@ try
   throw "exception"
 else ex
   log(ex.message)
-ensure
+always
   log("always runs")
 end
 ```
