@@ -740,7 +740,7 @@ The base component for integers and reals.
 A signed whole number with arbitrary range.
 - `stringify():Str` - returns the integer as a string
 - `parse(str:Str):Int` - converts the string to an integer or throws
-- `parse_or_null(str:Str?):Int?` - converts the string to an integer or returns null
+- `try_parse(str:Str?):Result(Int)` - converts the string to an integer or returns an error
 - `Infinity():Int` - returns infinity
 - `NaN():Int` - returns not-a-number
 
@@ -749,7 +749,7 @@ A signed whole number with arbitrary range.
 A signed fractional number with arbitrary range and precision.
 - `stringify():Str` - returns the real as a string
 - `parse(str:Str):Real` - converts the string to a real or throws
-- `parse_or_null(str:Str?):Real?` - converts the string to a real or returns null
+- `try_parse(str:Str?):Result(Real)` - converts the string to a real or returns an error
 - `Infinity():Real` - returns positive infinity
 - `NaN():Real` - returns not-a-number
 
@@ -784,13 +784,13 @@ Methods such as `append` also have a matching `with_append` which returns a new 
 - `length():Int` - calls `count()`
 - `contains(item:Obj):Bool` - returns true if sequence contains item
 - `first(predicate:Delegate):Obj` - returns the first item matching the predicate or throws
-- `first_or_null(predicate:Delegate):Obj?` - returns the first item matching the predicate or null
+- `try_first(predicate:Delegate):Obj?` - returns the first item matching the predicate or an error
 - `first():Obj` - returns the first item or throws
-- `first_or_null():Obj` - returns the first item or null
+- `try_first():Result(Obj)` - returns the first item or null
 - `last(predicate:Delegate):Obj` - returns the last item matching the predicate or throws
-- `last_or_null(predicate:Delegate):Obj?` - returns the last item matching the predicate or null
+- `try_last(predicate:Delegate):Obj?` - returns the last item matching the predicate or an error
 - `last():Obj` - returns the last item or throws
-- `last_or_null():Obj` - returns the last item or null
+- `try_last():Result(Obj)` - returns the last item or null
 - `max(get_value:Delegate? = null):Num` - gets the biggest value in the sequence of numbers
 - `min(get_value:Delegate? = null):Num` - gets the smallest value in the sequence of numbers
 - `average(type:AverageType = AverageType.mean):Num` - returns the average value of the sequence of numbers using mean, median, mode, or range
@@ -822,7 +822,7 @@ A sequence of key-value pairs.
 - `set(key:Obj, value:Obj):null` - creates and adds an entry
 - `set_each(values:Table):null` - sets each entry
 - `get(key:Obj):Obj` - finds a value from the key or throws
-- `get_or_null(key:Obj?):Obj?` - finds a value from the key or returns null
+- `try_get(key:Obj?):Result(Obj)` - finds a value from the key or returns an error
 - `keys():null` - returns a table of keys
 - `values():null` - returns a table of values
 - `contains_key(key:Obj?):Bool` - returns true if there's an entry with the given key
@@ -893,7 +893,7 @@ A date and time in the Gregorian calendar.
 - `offset():Real` - returns the offset component
 - `set_offset(value:Num):null` - sets the offset component
 - `parse(moment:Str):Moment` - converts the string to a moment or throws
-- `parse_or_null(moment:Str?):Moment?` - converts the string to a moment or returns null
+- `try_parse(moment:Str?):Result(Moment)` - converts the string to a moment or returns an error
 
 #### Span
 
@@ -911,7 +911,7 @@ A period of time.
 - `second():Real` - returns the second component
 - `set_second(value:Num):null` - sets the second component
 - `parse(span:Str):Span` - converts the string to a span or throws
-- `parse_or_null(span:Str?):Span?` - converts the string to a span or returns null
+- `try_parse(span:Str?):Result(Span)` - converts the string to a span or returns an error
 
 #### Exception
 
@@ -1020,6 +1020,18 @@ Generate pseudo-random numbers.
 - `int(range:Range):Int` - returns a random integer in the range
 - `real(min:Num, max:Num):Real` - returns a random real from min to max
 - `real(range:Range):Real` - returns a random real in the range
+
+#### Result
+
+An error or a value.
+- `from_value(value:Obj):Obj` - returns a result instance with the given value
+- `from_error(error:Obj):Obj` - returns a result instance with the given error
+- `value():Obj` - returns the value or throws
+- `value_or_null():Obj?` - returns the value or null
+- `is_value():Bool` - returns whether the result is a value
+- `error:Obj` - returns the error or throws
+- `error_or_null():Obj?` - returns the error or null
+- `is_error():Bool` - returns whether the result is an error
 
 ### Versioning Guide
 
