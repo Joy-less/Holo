@@ -954,9 +954,9 @@ A signal to be awaited and listened to.
 #### Math
 
 A collection of nerdy maths methods.
-- `Pi():Dec` - returns many digits of π (3.14...)
-- `Tau():Dec` - returns many digits of τ (6.28...)
-- `E():Dec` - returns many digits of e (2.71...)
+- `Pi(decimals:Int = 100):Real` - returns approximation of π (3.14...)
+- `Tau(decimals:Int = 100):Real` - returns approximation of τ (6.28...)
+- `E(decimals:Int = 100):Real` - returns approximation of e (2.71...)
 - `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `exp`, `log`, `log10`, `log2`, `hypot` - who even cares about these
 
 #### File
