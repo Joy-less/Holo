@@ -940,23 +940,18 @@ Limits the number of threads that can run at once.
 - `remaining():Int` - returns the remaining entries
 - `set_remaining(remaining:Int):null` - sets the remaining entries
 
-#### Canceller
-
-Cancels a background task collaboratively.
-- `cancel(delay:Num = 0):null` - calls `on_cancel()` after the delay
-- `on_cancel():Event` - an event to be invoked when cancelled
-- `is_cancelled():Bool` - returns true if cancelled
-- `reset():null` - un-cancels the canceller for reuse
-- `combined_with(other:canceller):Canceller` - combines two cancellers into one
-
 #### Event
 
 A signal to be awaited and listened to.
-- `invoke(arguments:Table = []):null` - calls each listener and waiter
+- `invoke(..arguments:Table = []):null` - calls each listener and waiter
 - `hook(method:Delegate, limit:Int? = null):null` - calls the method when the event is invoked up to limit times
 - `unhook(method:Delegate):Bool` - removes the method from being called when the event is invoked
 - `hooks():Table` - returns the hooked methods
 - `wait():Table` - waits for the event to be invoked
+- `invoke_count():Int` - returns the number of times the event was invoked
+- `set_invoke_count():Int` - sets the invoke count
+- `is_invoked(count:Int = 1):Bool` - returns whether `invoke_count()` > `count`
+- `combine(..events:Table):Event` - returns an event which hooks its invoke method to each event
 
 #### Math
 
