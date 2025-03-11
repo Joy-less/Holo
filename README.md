@@ -211,7 +211,7 @@ end
 meow
 ```
 
-Anonymous methods (stored in method objects) are declared with `sub()`. Brackets are mandatory.
+Anonymous methods (returned as `Delegate`) are declared with `sub()`. Brackets are mandatory.
 ```
 var meow := sub()
   log("nya")
@@ -849,8 +849,8 @@ An object containing a method and a target.
 - `overloads():Table` - returns a table of method overloads
 - `target():Obj` - returns the method target
 - `set_target(target:Obj):null` - sets the method target
-- `method_name():Str` - returns the method name
-- `set_method_name(name:Str):null` - sets the method name
+- `method_name():Str?` - returns the method name (or `null` for anonymous methods)
+- `set_method_name(name:Str?):null` - sets the method name
 
 #### Variable
 
