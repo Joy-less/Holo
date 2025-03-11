@@ -128,10 +128,18 @@ Escape sequences start with a backslash. Any unrecognised escape sequence is a s
 "newline: \n"
 "carriage return: \r"
 "tab: \t"
+"vertical tab: \v"
+"null: \0"
 "backspace: \b"
 "alert: \a"
-"binary: \0bInteger"
-"hexadecimal: \0xInteger"
+"escape: \e = \u001b"
+"binary: \0b01"
+"hexadecimal: \0x0123456789ABCDEF"
+"octal: \0o0123457"
+"utf-16 escape: \u00E7 = ç"
+"short utf-16 escape: \xE7 = ç"
+"utf-32 escape: \U0001F47D = 👽"
+"escaped newline: \(newline) = (empty)"
 ```
 
 ### Ranges
