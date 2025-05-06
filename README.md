@@ -89,8 +89,8 @@ Every operator is converted to a method call which can be overridden.
 | `not_in` | not contained in | `0 in [1, 2, 3]` | ``not [1, 2, 3].contains(0)`` | `false` | Checks if `b doesn't contain a` |
 | `is` | includes | `0 is int` | ``0.includes(int)`` | `true` | Checks if `a includes b` |
 | `is_not` | includes | `0 is_not int` | ``not 0.includes(int)`` | `false` | Checks if `a doesn't include b` |
-| `??` | null coalesce | `3 ?? 5` | ``3 == null then 5 else 3`` | `3` | Selects the first non-`null` value |
-| `?.` | null propagation | `3?.stringify()` | ``3 == null then null else 3.stringify()`` | `true` | Calls the method if not `null` |
+| `??` | null coalesce | `3 ?? 5` | ``if (3 == null) 5 else 3`` | `3` | Selects the first non-`null` value |
+| `?.` | null propagation | `3?.stringify()` | ``if (3 == null) null else 3.stringify()`` | `true` | Calls the method if not `null` |
 
 Compound assignment operators are shorthand for applying operators to the current value.
 
