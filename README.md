@@ -47,14 +47,33 @@ Variants contain private variables and public methods.
 
 ## Garbage Collection
 
-Holo runs a simple "mark & sweep" garbage collection on each actor using collaborative multi-threading:
-- Each object has a state: pending, unmarked, marked.
-- When an object is created, add it to a list of objects.
-- When collecting garbage, set the state of each object to unmarked.
-- Start at the actor, search variables recursively for objects and set their state to marked.
-- Free each object whose state is unmarked.
+Holo uses both "Mark & Sweep" and "Automatic Reference Counting" to collect dereferenced variants.
+Both can be configured or disabled.
 
-The algorithm yields before processing each object, which should remove any pauses.
+### Mark & Sweep
+
+Each actor runs a simple "Mark & Sweep" algorithm:
+
+- Each variant has a state: pending, unmarked, marked.
+- When an variant is created, add it to a list of variants.
+- When collecting garbage, set the state of each variant to unmarked.
+- Start at the actor, search variables recursively for variants and set their state to marked.
+- Free each variant whose state is unmarked.
+
+The algorithm yields before processing each variant to prevent pauses.
+
+Justification: This algorithm detects cyclic references.
+
+### Automatic Reference Counting
+
+Each variant runs a simple "Automatic Reference Counting" algorithm:
+
+- Each variant has a reference counter starting at 0.
+- When a variant is referenced, increment its reference counter.
+- When a variant is dereferenced, decrement its reference counter.
+- Free a variant when its reference counter reaches 0.
+
+Justification: This algorithm provides better performance for short-lived variants.
 
 ## Operators
 
