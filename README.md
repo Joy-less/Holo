@@ -186,3 +186,25 @@ The hash-code of every key is added to a binary-searchable list.
 Sets include `list` and represent a smart wrapper over a span of keys.
 
 The hash-code of every key is added to a binary-searchable list.
+
+## Attributes
+
+An attribute can be applied to any expression.
+
+```holo
+auto assign_increment = {
+    include variable_assignment_attribute
+
+    null before(variable_assignment_expression exp) {
+        log("\{exp.variable_name} will be incremented")
+    }
+    null after(variable_assignment_expression exp) {
+        exp.scope.eval("\{exp.name} += 1")
+    }
+}
+assign_increment: int counter = 3
+log(counter) // 4
+```
+
+- `override:` - Throws an exception if the method does not already exist
+- 
