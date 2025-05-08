@@ -45,6 +45,14 @@ log[fibonacci[10]]
 Every data type in Holo is a "variant" ("var").
 Variants contain private variables and public methods.
 
+## Concurrency & Parallelism
+
+Holo uses actors and collaborative multithreading to prevent race conditions.
+
+Actors can run in parallel and communicate by sending messages.
+
+An actor can contain multiple coroutines, but only one coroutine can run at a time. The actor cycles between coroutines when they yield.
+
 ## Garbage Collection
 
 Holo uses both "Mark & Sweep" and "Automatic Reference Counting" to collect dereferenced variants.
