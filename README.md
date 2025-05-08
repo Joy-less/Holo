@@ -11,18 +11,18 @@ Holo is a scripting language inspired by C#, C++, Lua and Ruby. Its design philo
 
 ```holo
 null fizzbuzz(int n) {
-    for (i in 1 to 10) {
+    for (int i in 1 to 10) {
         if (i % 3 == 0 and i % 5 == 0) {
-            log["FizzBuzz"]
+            log("FizzBuzz")
         }
         else if (i % 3 == 0) {
-            log["Fizz"]
+            log("Fizz")
         }
         else if (i % 5 == 0) {
-            log["Buzz"]
+            log("Buzz")
         }
         else {
-            log[i]
+            log(i)
         }
     }
 }
@@ -33,9 +33,9 @@ null fizzbuzz(int n) {
 ```holo
 int fibonacci(int n) {
     if (n in [0, 1]) return n
-    return fibonacci[n - 1] + fibonacci[n - 2]
+    return fibonacci(n - 1) + fibonacci(n - 2)
 }
-log[fibonacci[10]]
+log(fibonacci(10))
 ```
 
 ## Design Proposal
@@ -130,3 +130,59 @@ Compound assignment operators are shorthand for applying operators to the curren
 | `name %= value` | `name = name % value` |
 | `name **= value` | `name = name ** value` |
 | `name ??= value` | `name = name ?? value` |
+
+## Collections
+
+The base variant for all collections in Holo is `collection`.
+
+Collections contain a `count` property which can be `null`.
+
+### Spans
+
+<!--
+Every span has a permission enum:
+- `none` - The span can be reduced in size.
+- `mutable` - The span's elements can be set.
+- `extendable` - The span can be increased in size.
+
+A span's permissions can be reduced but not increased.
+When a span is created using `[]`, it is extendable.
+When a span is sliced, it is reduced to mutable.
+-->
+
+<!--
+There are three types of span:
+- `span` - A read-only slice over a contiguous region of memory.
+- `array` - A mutable slice over a contiguous region of memory.
+- `list` - A mutable, extendable slice over a contiguous region of memory.
+-->
+
+Spans include `collection` and represent a slice over a contiguous region of memory.
+
+There are two types of span:
+- `span`/`span(true)` - A mutable slice over a contiguous region of memory.
+- `span(false)` - A read-only slice over a contiguous region of memory.
+
+### Strings
+
+Strings are represented by `span(byte)`.
+
+The standard library assumes strings are UTF-8 encoded.
+
+### Lists
+
+Lists include `span` and represent a smart wrapper over a span.
+
+It contains methods to add elements and automatically grows an internal span.
+
+### Tables
+
+Tables include `list` and represent a smart wrapper over a span of key-values.
+
+The hash-code of every key is added to a binary-searchable list.
+
+### Sets
+
+Sets include `list` and represent a smart wrapper over a span of keys.
+
+The hash-code of every key is added to a binary-searchable list.
