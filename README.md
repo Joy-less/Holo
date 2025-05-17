@@ -88,6 +88,7 @@ Justification: This algorithm provides better performance for short-lived object
 Every object includes `object`, including `object`.
 
 Objects contain:
+
 - A table of variables, which are always private
 - A table of methods, which are always public
 - An internal array, which is used by `span`
@@ -97,6 +98,7 @@ Objects contain:
 Methods contain expressions and are not context-aware.
 
 Methods contain:
+
 - A list of expressions
 - A list of parameters
 
@@ -105,6 +107,7 @@ Methods contain:
 Delegates are references to a method in an object.
 
 Delegates contain:
+
 - A target object
 - A method name string
 
@@ -171,8 +174,9 @@ assign_increment: int counter = 3
 log(counter) // 4
 ```
 
+Standard library attributes:
+
 - `override:` - Throws an exception if the method does not already exist
-- 
 
 ## Operators
 
