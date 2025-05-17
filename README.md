@@ -42,8 +42,8 @@ log(fibonacci(10))
 
 ### Overview
 
-Every data type in Holo is a "variant" ("var").
-Variants contain private variables and public methods.
+Every data type in Holo is an "object" ("obj").
+Objects contain private variables and public methods.
 
 ## Concurrency & Parallelism
 
@@ -55,33 +55,108 @@ An actor can contain multiple coroutines, but only one coroutine can run at a ti
 
 ## Garbage Collection
 
-Holo uses both "Mark & Sweep" and "Automatic Reference Counting" to collect dereferenced variants.
+Holo uses both "Mark & Sweep" and "Automatic Reference Counting" to collect dereferenced objects.
 Both can be configured or disabled.
 
 ### Mark & Sweep
 
 Each actor runs a simple "Mark & Sweep" algorithm:
 
-- Each variant has a state: pending, unmarked, marked.
-- When an variant is created, add it to a list of variants.
-- When collecting garbage, set the state of each variant to unmarked.
-- Start at the actor, search variables recursively for variants and set their state to marked.
-- Free each variant whose state is unmarked.
+- Each object has a state: pending, unmarked, marked.
+- When an object is created, add it to a list of objects.
+- When collecting garbage, set the state of each object to unmarked.
+- Start at the actor, search variables recursively for objects and set their state to marked.
+- Free each object whose state is unmarked.
 
-The algorithm yields before processing each variant to prevent pauses.
+The algorithm yields before processing each object to prevent pauses.
 
 Justification: This algorithm detects cyclic references.
 
 ### Automatic Reference Counting
 
-Each variant runs a simple "Automatic Reference Counting" algorithm:
+Each object runs a simple "Automatic Reference Counting" algorithm:
 
-- Each variant has a reference counter starting at 0.
-- When a variant is referenced, increment its reference counter.
-- When a variant is dereferenced, decrement its reference counter.
-- Free a variant when its reference counter reaches 0.
+- Each object has a reference counter starting at 0.
+- When a object is referenced, increment its reference counter.
+- When a object is dereferenced, decrement its reference counter.
+- Free a object when its reference counter reaches 0.
 
-Justification: This algorithm provides better performance for short-lived variants.
+Justification: This algorithm provides better performance for short-lived objects.
+
+## Methods
+
+
+
+## Objects
+
+Every object includes `object`, including `object`.
+
+Objects contain:
+- A table of variables, which are always private
+- A table of methods, which are always public
+- An internal array, which is used by `span`
+
+## Collections
+
+The base for all collections is `collection`.
+
+Collections have an `int count()` method which returns a tracked value or enumerates the collection.
+Collections have a `bool has_count()` method which returns whether the count is tracked.
+
+### Spans
+
+Spans include `collection` and represent a slice over a contiguous region of memory.
+
+Spans have an `is_frozen()` method which returns whether the span's elements cannot be changed.
+Spans have a `freeze()` method which prevents the span's elements from being changed.
+
+### Lists
+
+Lists include `collection` and are a wrapper over `span`.
+
+It contains methods to add elements and automatically grows an internal span.
+
+### Strings
+
+Strings include `list` and are a wrapper over `span(byte)`.
+
+Strings are assumed to be UTF-8 encoded.
+
+### Tables
+
+Tables include `list` and are a wrapper over `span(table_entry)`.
+
+A `table_entry` contains a key and a value.
+The key is hashed so that the span is binary-searchable.
+
+### Sets
+
+Sets include `list` and are a wrapper over `span(set_entry)`.
+
+A `set_entry` contains a key.
+The key is hashed so that the span is binary-searchable.
+
+## Attributes
+
+An attribute can be applied to any expression.
+
+```holo
+auto assign_increment = {
+    include variable_assignment_attribute
+
+    null before(variable_assignment_expression exp) {
+        log("\{exp.variable_name} will be incremented")
+    }
+    null after(variable_assignment_expression exp) {
+        exp.scope.eval("\{exp.name} += 1")
+    }
+}
+assign_increment: int counter = 3
+log(counter) // 4
+```
+
+- `override:` - Throws an exception if the method does not already exist
+- 
 
 ## Operators
 
@@ -130,81 +205,3 @@ Compound assignment operators are shorthand for applying operators to the curren
 | `name %= value` | `name = name % value` |
 | `name **= value` | `name = name ** value` |
 | `name ??= value` | `name = name ?? value` |
-
-## Collections
-
-The base variant for all collections in Holo is `collection`.
-
-Collections contain a `count` property which can be `null`.
-
-### Spans
-
-<!--
-Every span has a permission enum:
-- `none` - The span can be reduced in size.
-- `mutable` - The span's elements can be set.
-- `extendable` - The span can be increased in size.
-
-A span's permissions can be reduced but not increased.
-When a span is created using `[]`, it is extendable.
-When a span is sliced, it is reduced to mutable.
--->
-
-<!--
-There are three types of span:
-- `span` - A read-only slice over a contiguous region of memory.
-- `array` - A mutable slice over a contiguous region of memory.
-- `list` - A mutable, extendable slice over a contiguous region of memory.
--->
-
-Spans include `collection` and represent a slice over a contiguous region of memory.
-
-There are two types of span:
-- `span`/`span(true)` - A mutable slice over a contiguous region of memory.
-- `span(false)` - A read-only slice over a contiguous region of memory.
-
-### Strings
-
-Strings are represented by `span(byte)`.
-
-The standard library assumes strings are UTF-8 encoded.
-
-### Lists
-
-Lists include `span` and represent a smart wrapper over a span.
-
-It contains methods to add elements and automatically grows an internal span.
-
-### Tables
-
-Tables include `list` and represent a smart wrapper over a span of key-values.
-
-The hash-code of every key is added to a binary-searchable list.
-
-### Sets
-
-Sets include `list` and represent a smart wrapper over a span of keys.
-
-The hash-code of every key is added to a binary-searchable list.
-
-## Attributes
-
-An attribute can be applied to any expression.
-
-```holo
-auto assign_increment = {
-    include variable_assignment_attribute
-
-    null before(variable_assignment_expression exp) {
-        log("\{exp.variable_name} will be incremented")
-    }
-    null after(variable_assignment_expression exp) {
-        exp.scope.eval("\{exp.name} += 1")
-    }
-}
-assign_increment: int counter = 3
-log(counter) // 4
-```
-
-- `override:` - Throws an exception if the method does not already exist
-- 
