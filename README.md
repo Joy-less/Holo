@@ -98,6 +98,7 @@ Methods contain expressions and are not context-aware.
 
 Methods contain:
 - A list of expressions
+- A list of parameters
 
 ## Delegates
 
