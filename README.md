@@ -157,12 +157,12 @@ An attribute can be applied to any expression.
 
 ```holo
 auto assign_increment = {
-    include variable_assignment_attribute
+    include attribute
 
-    null before(variable_assignment_expression exp) {
+    null pre_process(expression exp) {
         log("\{exp.variable_name} will be incremented")
     }
-    null after(variable_assignment_expression exp) {
+    null post_process(expression exp) {
         exp.scope.eval("\{exp.name} += 1")
     }
 }
