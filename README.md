@@ -123,6 +123,8 @@ Spans include `collection` and represent a slice over a contiguous region of mem
 Spans have an `is_frozen()` method which returns whether the span's elements cannot be changed.
 Spans have a `freeze()` method which prevents the span's elements from being changed.
 
+When using square brackets (`[]`) a span is created, which can be cast to another collection type.
+
 ### Lists
 
 Lists include `collection` and are a wrapper over `span`.
