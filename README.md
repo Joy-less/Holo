@@ -83,10 +83,6 @@ Each object runs a simple "Automatic Reference Counting" algorithm:
 
 Justification: This algorithm provides better performance for short-lived objects.
 
-## Methods
-
-
-
 ## Objects
 
 Every object includes `object`, including `object`.
@@ -95,6 +91,23 @@ Objects contain:
 - A table of variables, which are always private
 - A table of methods, which are always public
 - An internal array, which is used by `span`
+
+## Methods
+
+Methods contain expressions and are not context-aware.
+
+Methods contain:
+- A list of expressions
+
+## Delegates
+
+Delegates are references to a method in an object.
+
+Delegates contain:
+- A target object
+- A method name string
+
+When retrieving a method directly (e.g. `cat.meow`) a delegate is returned rather than a method.
 
 ## Collections
 
