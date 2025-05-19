@@ -167,18 +167,6 @@ The base for all numbers is `number`.
 
 Integers include `number` and support a whole value of an arbitrary range and precision.
 
-### Integer8s
-
-Integer32s include `integer` and support an 8-bit signed integer.
-
-### Integer16s
-
-Integer32s include `integer` and support a 16-bit signed integer.
-
-### Integer32s
-
-Integer32s include `integer` and support a 32-bit signed integer.
-
 ### Integer64s
 
 Integer64s include `integer` and support a 64-bit signed integer.
@@ -186,14 +174,6 @@ Integer64s include `integer` and support a 64-bit signed integer.
 ### Reals
 
 Reals include `number` and support a fractional value of an arbitrary range and precision.
-
-### Real16s
-
-Real16s include `real` and support a 16-bit signed float.
-
-### Real32s
-
-Real32s include `real` and support a 32-bit signed float.
 
 ### Real64s
 
