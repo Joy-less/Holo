@@ -195,15 +195,15 @@ Every operator is converted to a method call which can be overridden.
 
 | Operator | Name | Example | Equivalent | Output | Implementation |
 | --- | --- | --- | --- | --- | --- |
-| `not` | logical NOT | `not true` | ``true.`not`()`` | `false` | Checks for `false` |
-| `and` | logical AND | `true and false` | ``true.`and`(false)`` | `false` | Checks both are `true` |
-| `or` | logical OR | `true or false` | ``true.`or`(false)`` | `true` | Checks at least one is `true` |
-| `~` | bitwise XOR | `true ~ false` | ``true.`~`(false)`` | `true` | Checks exactly one is `true`, evaluating both |
-| `&` | bitwise AND | `true & false` | ``true.`&`(false)`` | `false` | Checks both are `true`, evaluating both |
-| `\|` | bitwise OR | `true \| false` | ``true.`\|`(false)`` | `true` | Checks at least one is `true`, evaluating both |
-| `>>` | bitwise RIGHT SHIFT | `10 >> 2` | ``10.`>>`(2)`` | `2` | Multiplies by `2**x` |
-| `<<` | bitwise LEFT SHIFT | `10 << 2` | ``10.`<<`(2)`` | `40` | Divides by `2**x` |
-| `~` | bitwise NOT | `~10` | ``10.`~`()`` | `-11` | Negates the number and subtracts `1` |
+| `not` | logical not | `not true` | ``true.`not`()`` | `false` | Checks for `false` |
+| `and` | logical and | `true and false` | ``true.`and`(false)`` | `false` | Checks both are `true` |
+| `or` | logical or | `true or false` | ``true.`or`(false)`` | `true` | Checks at least one is `true` |
+| `~` | bitwise xor | `true ~ false` | ``true.`~`(false)`` | `true` | Checks exactly one is `true`, evaluating both |
+| `&` | bitwise and | `true & false` | ``true.`&`(false)`` | `false` | Checks both are `true`, evaluating both |
+| `\|` | bitwise or | `true \| false` | ``true.`\|`(false)`` | `true` | Checks at least one is `true`, evaluating both |
+| `>>` | bitwise right shift | `10 >> 2` | ``10.`>>`(2)`` | `2` | Multiplies by `2**x` |
+| `<<` | bitwise left shift | `10 << 2` | ``10.`<<`(2)`` | `40` | Divides by `2**x` |
+| `~` | bitwise not | `~10` | ``10.`~`()`` | `-11` | Negates the number and subtracts `1` |
 | `==` | equals | `true == false` | ``true.`==`(false)`` | `false` | Checks for equality |
 | `~=` | not equals | `true ~= false` | ``true.`~=`(false)`` | `true` | Checks for no equality |
 | `>` | greater than | `10 > 2` | ``10.`>`(2)`` | `true` | Checks for greater sort order |
