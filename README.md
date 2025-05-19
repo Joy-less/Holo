@@ -102,6 +102,11 @@ Methods contain:
 - A list of expressions
 - A list of parameters
 
+Methods are called by name with optional brackets.
+
+A single object can have multiple methods with the same name, called "overloads".
+If a call is ambiguous between two overloads, the first overload is always chosen.
+
 ## Delegates
 
 Delegates are references to a method in an object.
@@ -111,10 +116,9 @@ Delegates contain:
 - A target object
 - A method object
 
-When retrieving a method directly (e.g. `cat.meow`) a delegate is returned rather than a method.
+When retrieving a method (e.g. `cat.methods.get("meow")`) a delegate is returned rather than a method.
 
-A single object can have multiple methods with the same name, called "overloads".
-If a call is ambiguous between two overloads, the first overload is always chosen.
+Delegates can be called with the `call` method.
 
 ## Collections
 
@@ -247,3 +251,20 @@ The `break` method unwinds until an iteration scope is reached and ends the iter
 
 The `next` method unwinds until an iteration scope is reached and moves to the next iteration.
 
+### Variable Get
+
+An identifier by itself gets the value of a variable.
+
+Example: `money`
+
+### Method Call
+
+An identifier followed by brackets calls a method.
+
+Example: `meow()`
+
+### Targeted Method Call
+
+An expression followed by a dot followed by an identifier calls a method on the expression.
+
+Example: `cat.meow`
