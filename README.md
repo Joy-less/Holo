@@ -241,15 +241,15 @@ Compound assignment operators are shorthand for applying operators to the curren
 
 ### Return
 
-The `return` method unwinds until a call scope is reached and returns a value or `null`.
+The `return` keyword unwinds until a call scope is reached and returns a value or `null`.
 
 ### Break
 
-The `break` method unwinds until an iteration scope is reached and ends the iteration.
+The `break` keyword unwinds until an iteration scope is reached and ends the iteration.
 
 ### Next
 
-The `next` method unwinds until an iteration scope is reached and moves to the next iteration.
+The `next` keyword unwinds until an iteration scope is reached and moves to the next iteration.
 
 ### Variable Get
 
