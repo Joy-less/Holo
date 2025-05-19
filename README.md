@@ -91,7 +91,7 @@ Objects contain:
 
 - A table of variables, which are always private
 - A table of methods, which are always public
-- An internal array, which is used by `span`
+- An internal data pointer, which is used by internal types like `span` and `integer`
 
 ## Methods
 
@@ -158,6 +158,46 @@ Sets include `list` and are a wrapper over `span(set_entry)`.
 
 A `set_entry` contains a key.
 The key is hashed so that the span is binary-searchable.
+
+### Numbers
+
+The base for all numbers is `number`.
+
+### Integers
+
+Integers include `number` and support a whole value of an arbitrary range and precision.
+
+### Integer8s
+
+Integer32s include `integer` and support an 8-bit signed integer.
+
+### Integer16s
+
+Integer32s include `integer` and support a 16-bit signed integer.
+
+### Integer32s
+
+Integer32s include `integer` and support a 32-bit signed integer.
+
+### Integer64s
+
+Integer64s include `integer` and support a 64-bit signed integer.
+
+### Reals
+
+Reals include `number` and support a fractional value of an arbitrary range and precision.
+
+### Real16s
+
+Real16s include `real` and support a 16-bit signed float.
+
+### Real32s
+
+Real32s include `real` and support a 32-bit signed float.
+
+### Real64s
+
+Real64s include `real` and support a 64-bit signed float.
 
 ## Attributes
 
