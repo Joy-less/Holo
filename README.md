@@ -268,3 +268,9 @@ Example: `meow()`
 An expression followed by a dot followed by an identifier calls a method on the expression.
 
 Example: `cat.meow`
+
+### Auto
+
+The `auto` keyword used in a type annotation gets the runtime value of an expression.
+
+Example: `auto number = 5`
