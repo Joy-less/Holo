@@ -160,20 +160,24 @@ The key is hashed so that the span is binary-searchable.
 
 ## Attributes
 
-An attribute can be applied to any expression.
+An attribute can be applied to any expression using `@`.
+
+Attributes execute methods based on the expression itself.
 
 ```holo
 auto assign_increment = {
     include attribute
 
+    // Called before the expression is executed
     null pre_process(expression exp) {
         log("\{exp.variable_name} will be incremented")
     }
-    null post_process(expression exp) {
+    // Called after the expression is executed
+    null post_process(expression exp, object? result) {
         exp.scope.eval("\{exp.name} += 1")
     }
 }
-assign_increment: int counter = 3
+@assign_increment int counter = 3
 log(counter) // 4
 ```
 
