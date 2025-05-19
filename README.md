@@ -109,9 +109,12 @@ Delegates are references to a method in an object.
 Delegates contain:
 
 - A target object
-- A method name string
+- A method object
 
 When retrieving a method directly (e.g. `cat.meow`) a delegate is returned rather than a method.
+
+A single object can have multiple methods with the same name, called "overloads".
+If a call is ambiguous between two overloads, the first overload is always chosen.
 
 ## Collections
 
