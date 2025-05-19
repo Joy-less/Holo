@@ -131,9 +131,6 @@ Collections have a `bool has_count()` method which returns whether the count is 
 
 Spans include `collection` and represent a slice over a contiguous region of memory.
 
-Spans have an `is_frozen()` method which returns whether the span's elements cannot be changed.
-Spans have a `freeze()` method which prevents the span's elements from being changed.
-
 When using square brackets (`[]`) a span is created, which can be cast to another collection type.
 
 ### Lists
