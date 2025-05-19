@@ -255,22 +255,30 @@ The `next` method unwinds until an iteration scope is reached and moves to the n
 
 An identifier by itself gets the value of a variable.
 
-Example: `money`
+```holo
+money
+```
 
 ### Method Call
 
 An identifier followed by brackets calls a method.
 
-Example: `meow()`
+```holo
+meow()
+```
 
 ### Targeted Method Call
 
 An expression followed by a dot followed by an identifier calls a method on the expression.
 
-Example: `cat.meow`
+```holo
+cat.meow
+```
 
 ### Auto
 
 The `auto` keyword used in a type annotation gets the runtime value of an expression.
 
-Example: `auto number = 5`
+```holo
+auto number = 5
+```
