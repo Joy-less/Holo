@@ -353,3 +353,12 @@ The `auto` keyword used in a type annotation gets the runtime value of an expres
 ```holo
 auto number = 5
 ```
+
+### Attribute
+
+An expression starting with `@` is applied to the subsequent expression.
+
+```holo
+@getter
+int counter = 0
+```
