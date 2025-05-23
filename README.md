@@ -124,14 +124,19 @@ Delegates can be called with the `call` method.
 
 There is no differentiation between static and instance objects.
 
-Objects can be constructed using `new`.
-The returned object will include the original object.
+The `copy` method creates a new instance of the object that includes the object.
+
+### Constructors
+
+The `new` methods are called constructors.
+Constructors should return a new object including the original object.
+Constructors are useful for instantiating an object.
 ```holo
 auto box = {
     obj content
 
     // Option 1: create constructor automatically
-    generate_constructor("content")
+    generate_constructor("new", ["content"])
 
     // Option 2: create constructor manually
     box new(obj content) {
@@ -143,13 +148,17 @@ auto box = {
 box new_box = box.new(5)
 ```
 
-Objects can be specialized using `of`.
+### Specializers
+
+The `of` methods are called specializers.
+Specializers should return a cached object including the original object.
+Specializers are useful for setting type variables and constants.
 ```holo
 auto box = {
     obj type_content
 
     // Option 1: create specializer automatically
-    generate_specializer("type_content")
+    generate_specializer("of", ["type_content"])
 
     // Option 2: create specializer manually
     table.of(span, box) specialized_cache = []
