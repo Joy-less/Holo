@@ -131,7 +131,7 @@ auto box = {
     obj content
 
     // Option 1: create constructor automatically
-    generate_new("content")
+    generate_constructor("content")
 
     // Option 2: create constructor manually
     box new(obj content) {
