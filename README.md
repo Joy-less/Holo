@@ -256,7 +256,9 @@ log(counter) // 4
 
 Standard library attributes:
 
-- `override:` - Throws an exception if the method does not already exist
+- `@override` - Throws an exception if the method does not already exist
+- `@getter` - Creates a method that gets the value of the variable
+- `@setter` - Creates a method that sets the value of the variable
 
 ## Operators
 
