@@ -147,17 +147,16 @@ Strings are assumed to be UTF-8 encoded.
 
 ### Tables
 
-Tables include `list` and are a wrapper over `span(table_entry)`.
+Tables include `list` and are a wrapper over `span(key_value)`.
 
-A `table_entry` contains a key and a value.
-The key is hashed so that the span is binary-searchable.
+A `key_value` contains a key and a value.
+An internal ordered list of hash-codes is synchronized with the span so that it's binary-searchable.
 
 ### Sets
 
-Sets include `list` and are a wrapper over `span(set_entry)`.
+Sets include `list` and are a wrapper over `span`.
 
-A `set_entry` contains a key.
-The key is hashed so that the span is binary-searchable.
+An internal ordered list of hash-codes is synchronized with the span so that it's binary-searchable.
 
 ### Numbers
 
