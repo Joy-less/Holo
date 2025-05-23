@@ -120,6 +120,50 @@ When retrieving a method (e.g. `cat.methods.get("meow")`) a delegate is returned
 
 Delegates can be called with the `call` method.
 
+## Constructors & Specializers
+
+There is no differentiation between static and instance objects.
+
+Objects can be constructed using `new`.
+The returned object will include the original object.
+```holo
+auto box = {
+    obj content
+
+    // Option 1: create constructor automatically
+    generate_new("content")
+
+    // Option 2: create constructor manually
+    box new(obj content) {
+        box instance = copy()
+        instance.content = content
+        return instance
+    }
+}
+box new_box = box.new(5)
+```
+
+Objects can be specialized using `of`.
+```holo
+auto box = {
+    obj type_content
+
+    // Option 1: create specializer automatically
+    generate_specializer("type_content")
+
+    // Option 2: create specializer manually
+    table.of(span, box) specialized_cache = []
+    box of(obj type_content) {
+        return specialized_cache.get_or_add([type_content], box() {
+            box instance = copy()
+            instance.type_content = type_content
+            return instance
+        })
+    }
+}
+box.of(int) new_int_box = box.of(int).new()
+```
+
 ## Collections
 
 The base for all collections is `collection`.
@@ -141,23 +185,22 @@ It contains methods to add elements and automatically grows an internal span.
 
 ### Strings
 
-Strings include `list` and are a wrapper over `span(byte)`.
+Strings include `list` and are a wrapper over `span.of(byte)`.
 
 Strings are assumed to be UTF-8 encoded.
 
 ### Tables
 
-Tables include `list` and are a wrapper over `span(table_entry)`.
+Tables include `list` and are a wrapper over `span.of(key_value)`.
 
-A `table_entry` contains a key and a value.
-The key is hashed so that the span is binary-searchable.
+A `key_value` contains a key and a value.
+An internal ordered list of hash-codes is synchronized with the span so that it's binary-searchable.
 
 ### Sets
 
-Sets include `list` and are a wrapper over `span(set_entry)`.
+Sets include `list` and are a wrapper over `span`.
 
-A `set_entry` contains a key.
-The key is hashed so that the span is binary-searchable.
+An internal ordered list of hash-codes is synchronized with the span so that it's binary-searchable.
 
 ### Numbers
 
